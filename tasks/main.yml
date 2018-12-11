@@ -1,0 +1,13 @@
+---
+- name: "manage pi-hole user"
+  include_tasks: "users.yml"
+  tags:
+    - pihole
+    - installation
+    - users
+
+- name: "install pi-hole"
+  include_tasks: "install.yml"
+  tags:
+    - pihole
+    - installation
