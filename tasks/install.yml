@@ -14,6 +14,7 @@
     clone: true
     depth: 1
     dest: "{{ pi_hole_download_dir }}/{{ pi_hole_install_dir }}"
+    version: master
   when: pihole_installed.stat.isdir is undefined
   tags:
     - pihole
@@ -21,7 +22,7 @@
     - source
 
 - name: "install pihole"
-  shell: basic-install.sh
+  command: bash basic-install.sh
   args:
     chdir: "{{ pi_hole_download_dir }}/{{ pi_hole_install_dir }}/automated install"
   when: pihole_installed.stat.isdir is undefined
