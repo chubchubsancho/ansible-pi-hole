@@ -1,0 +1,70 @@
+---
+dependency:
+  name: galaxy
+  options:
+    role-files: requirements.yml
+
+driver:
+  name: docker
+
+lint:
+  name: yamllint
+  options:
+    config-file: molecule/default/rules/yaml-lint.yml
+
+platforms:
+  - name: container-pi-hole-Debian9
+    image: debian:stretch
+    env:
+      container: docker
+    stop_signal: SIGRTMIN+3
+    groups:
+      - default
+  - name: container-pi-hole-Debian8
+    image: debian:jessie
+    env:
+      container: docker
+    stop_signal: SIGRTMIN+3
+    groups:
+      - default
+  - name: container-pi-hole-Ubuntu18.04
+    image: ubuntu:18.04
+    env:
+      container: docker
+    stop_signal: SIGRTMIN+3
+    groups:
+      - default
+  - name: container-pi-hole-Ubuntu16.04
+    image: ubuntu:16.04
+    env:
+      container: docker
+    stop_signal: SIGRTMIN+3
+    groups:
+      - default
+  - name: container-pi-hole-CentOS7
+    image: centos:7
+    env:
+      container: docker
+    stop_signal: SIGRTMIN+3
+    groups:
+      - default
+
+provisioner:
+  name: ansible
+  log: true
+  inventory:
+    links:
+      group_vars: group_vars/
+      host_vars: host_vars/
+  playbooks:
+    # create: create.yml
+    # prepare: prepare.yml
+    converge: playbook.yml
+  lint:
+    name: ansible-lint
+    options:
+      force-color: true
+      # c: molecule/default/rules/ansible-lint.yml
+
+scenario:
+  name: default

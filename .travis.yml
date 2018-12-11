@@ -1,0 +1,32 @@
+---
+
+sudo: required
+language: python
+services:
+  - docker
+
+stages:
+  - deploy
+
+matrix:
+  fast_finish: true
+
+jobs:
+  include:
+    - stage: deploy
+      name: deploy pi-hole
+      script:
+        - >
+           travis_wait 20 sleep infinity & docker run --rm -it
+           --mount type=bind,source="$(pwd)",target=/tmp/$(basename "$PWD")
+           -v /var/run/docker.sock:/var/run/docker.sock
+           -w /tmp/$(basename "$PWD")
+           quay.io/ansible/molecule:latest
+           sudo molecule test
+
+notifications:
+  email:
+    on_failure: change
+    on_success: never
+  # webhooks:
+  #   - https://galaxy.ansible.com/api/v1/notifications/
