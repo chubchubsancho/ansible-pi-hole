@@ -1,0 +1,20 @@
+---
+
+- name: "create Pi-Hole group"
+  group:
+    name: "{{ pi_hole_group }}"
+    state: present
+  tags:
+    - pihole
+    - installation
+    - users
+
+- name: "create pihole user"
+  user:
+    name: "{{ pi_hole_user }}"
+    group: "{{ pi_hole_group }}"
+    state: present
+  tags:
+    - pihole
+    - installation
+    - users
