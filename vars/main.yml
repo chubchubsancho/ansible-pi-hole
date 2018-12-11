@@ -1,3 +1,7 @@
 ---
 # Pi-Hole repository url
 pi_hole_repo: "https://github.com/pi-hole/pi-hole.git"
+
+# Prerequisites packages
+pi_hole_prerequisites:
+  - git

@@ -1,0 +1,11 @@
+---
+- name: "install packages"
+  yum:
+    name: "{{ pi_hole_prerequisites }}"
+    state: present
+    update_cache: true
+  tags:
+    - pihole
+    - installation
+    - prerequisites
+

@@ -1,4 +1,11 @@
 ---
+- name: "install prerequisites"
+  include_tasks: "{{ ansible_os_family | lower }}-prerequisites.yml"
+  tags:
+    - pihole
+    - installation
+    - prerequisites
+
 - name: "install pi-hole"
   include_tasks: "install.yml"
   tags:
