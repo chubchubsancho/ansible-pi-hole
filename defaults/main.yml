@@ -1,0 +1,12 @@
+---
+# Pi-Hole user
+pi_hole_user: "pihole"
+
+# Pi-Hole group
+pi_hole_group: "pihole"
+
+# The directory where the downloaded files will be placed
+pi_hole_download_dir: "/home/pihole"
+
+# The installation directory
+pi_hole_install_dir: "pi-hole"
