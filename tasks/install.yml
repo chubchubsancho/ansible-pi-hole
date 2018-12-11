@@ -1,0 +1,26 @@
+---
+- name: "check if pi-hole is already installed"
+  stat:
+    path: "/opt/pihole"
+  register: pihole_installed
+  tags:
+    - pihole
+    - installation
+    - check
+
+- name: "clone pihome repository"
+  git:
+    repo: "{{ pi_hole_repo }}"
+    clone: true
+    depth: 1
+    dest: "{{ pi_hole_download_dir }}/{{ pi_hole_install_dir }}"
+  when: pihole_installed.stat.isdir is undefined
+  tags:
+    - pihole
+    - installation
+    - source
+
+- name: "install pihole"
+  shell: basic-install.sh
+  chdir: "{{ pi_hole_download_dir }}/{{ pi_hole_install_dir }}/automated install"
+  when: pihole_installed.stat.isdir is undefined
