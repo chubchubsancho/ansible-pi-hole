@@ -7,51 +7,25 @@ dependency:
 driver:
   name: docker
 
-lint:
-  name: yamllint
-  options:
-    config-file: molecule/default/rules/yaml-lint.yml
+lint: |
+  set -e
+  yamllint -c ./molecule/resources/rules/yamllint.yaml .
+  ansible-lint .
+  flake8
 
 platforms:
-  - name: container-pi-hole-Debian9
-    image: debian:stretch
+  - name: "instance"
+    image: "$image:$version"
+    command: /sbin/init
+    privileged: true
     env:
       container: docker
-    stop_signal: SIGRTMIN+3
     groups:
-      - default
-  - name: container-pi-hole-Debian8
-    image: debian:jessie
-    env:
-      container: docker
-    stop_signal: SIGRTMIN+3
-    groups:
-      - default
-  - name: container-pi-hole-Ubuntu18.04
-    image: ubuntu:18.04
-    env:
-      container: docker
-    stop_signal: SIGRTMIN+3
-    groups:
-      - default
-  - name: container-pi-hole-Ubuntu16.04
-    image: ubuntu:16.04
-    env:
-      container: docker
-    stop_signal: SIGRTMIN+3
-    groups:
-      - default
-  - name: container-pi-hole-CentOS7
-    image: centos:7
-    env:
-      container: docker
-    stop_signal: SIGRTMIN+3
-    groups:
-      - default
+      - "default"
 
 provisioner:
-  name: ansible
   log: true
+  name: ansible
   inventory:
     links:
       group_vars: group_vars/
@@ -59,12 +33,24 @@ provisioner:
   playbooks:
     # create: create.yml
     # prepare: prepare.yml
-    converge: playbook.yml
-  lint:
-    name: ansible-lint
-    options:
-      force-color: true
-      # c: molecule/default/rules/ansible-lint.yml
+    converge: ../resources/playbook.yml
+  options:
+    vvv: true
+    dif: true
 
 scenario:
   name: default
+  test_sequence:
+    - destroy
+    - dependency
+    - syntax
+    - create
+    - prepare
+    - converge
+    - idempotence
+    # - side_effect
+    # - verify
+    # - destroy
+
+verifier:
+  name: testinfra
