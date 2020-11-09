@@ -29,7 +29,7 @@
     - installation
     - prepare
 
-- name: "clone pihome repository"
+- name: "clone pihole repository"
   git:
     repo: "{{ pi_hole_repo }}"
     clone: true
