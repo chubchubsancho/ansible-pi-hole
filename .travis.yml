@@ -27,7 +27,12 @@ jobs:
     - stage: build
       env: image=debian version=9
     - env: image=debian version=10
+    - env: image=ubuntu version=16.04
+    - env: image=ubuntu version=16.10
+    - env: image=ubuntu version=18.04
+    - env: image=ubuntu version=18.10
     - env: image=ubuntu version=20.04
+    - env: image=ubuntu version=20.10
     - env: image=fedora version=31
     - env: image=fedora version=32
 
