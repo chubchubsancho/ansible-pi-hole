@@ -34,7 +34,7 @@
     repo: "{{ pi_hole_repo }}"
     clone: true
     depth: 1
-    dest: "{{ pi_hole_download_dir }}/{{ pi_hole_install_dir }}"
+    dest: "{{ pi_hole_install_dir }}"
     version: master
   when: pihole_installed.stat.isdir is undefined
   tags:
@@ -46,6 +46,6 @@
   become: true
   command: bash basic-install.sh --unattended
   args:
-    chdir: "{{ pi_hole_download_dir }}/{{ pi_hole_install_dir }}/automated install"
+    chdir: "{{ pi_hole_install_dir }}/automated install"
     creates: installed.txt
   when: pihole_installed.stat.isdir is undefined
