@@ -5,3 +5,6 @@ pi_hole_repo: "https://github.com/pi-hole/pi-hole.git"
 # Prerequisites packages
 pi_hole_prerequisites:
   - git
+
+# Pi-hole installation directory
+pi_hole_install_dir: "/etc/.pihole"
