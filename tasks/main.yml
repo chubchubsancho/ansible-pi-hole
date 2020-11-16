@@ -11,3 +11,9 @@
   tags:
     - pihole
     - installation
+
+- name: "configure pi-hole"
+  include_tasks: "configure.yml"
+  tags:
+    - pihole
+    - configure

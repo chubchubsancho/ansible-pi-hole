@@ -1,0 +1,9 @@
+---
+- name: configure pi-hole FTL
+  template:
+    src: etc/pihole/pihole-FTL.conf.j2
+    dest: /etc/pihole/pihole-FTL.conf
+    mode: 0644
+  tags:
+    - pihole
+    - configure
