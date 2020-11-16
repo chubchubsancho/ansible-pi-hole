@@ -14,7 +14,7 @@ ENV {{ var }} {{ value }}
 {% endfor %}
 {% endif %}
 
-RUN if [ $(command -v apt-get) ]; then apt-get update && DEBIAN_FRONTEND=noninteractive LANG=C.UTF-8 apt-get upgrade -y && DEBIAN_FRONTEND=noninteractive LANG=C.UTF-8 apt-get install -y python3 sudo bash ca-certificates iproute2 python3-apt aptitude systemd systemd-sysv && apt-get clean; \
+RUN if [ $(command -v apt-get) ]; then apt-get update && DEBIAN_FRONTEND=noninteractive LANG=C.UTF-8 apt-get install -y python3 sudo bash ca-certificates iproute2 python3-apt aptitude systemd systemd-sysv && apt-get clean; \
     elif [ $(command -v dnf) ]; then dnf makecache && dnf --assumeyes install /usr/bin/python3 /usr/bin/python3-config /usr/bin/dnf-3 sudo bash iproute systemd systemd-sysv && dnf clean all; \
     elif [ $(command -v yum) ]; then yum makecache fast && yum install -y /usr/bin/python /usr/bin/python2-config sudo yum-plugin-ovl bash iproute systemd systemd-sysv && sed -i 's/plugins=0/plugins=1/g' /etc/yum.conf && yum clean all; \
     fi
