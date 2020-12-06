@@ -4,6 +4,8 @@
     src: etc/pihole/pihole-FTL.conf.j2
     dest: /etc/pihole/pihole-FTL.conf
     mode: 0644
+  notify:
+    - Restart pihole-FTL
   tags:
     - pihole
     - configure
