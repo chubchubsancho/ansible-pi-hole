@@ -1,32 +1,50 @@
 ---
-
-sudo: required
+os: linux
+dist: bionic
 language: python
 services:
   - docker
 
-stages:
-  - deploy
+install: skip
 
-matrix:
-  fast_finish: true
+stages:
+  - linter
+  - build
 
 jobs:
+  fast_finish: true
   include:
-    - stage: deploy
-      name: deploy pi-hole
+    - stage: linter
+      env: image=debian verion=10
       script:
         - >
-           travis_wait 20 sleep infinity & docker run --rm -it
-           --mount type=bind,source="$(pwd)",target=/tmp/$(basename "$PWD")
-           -v /var/run/docker.sock:/var/run/docker.sock
-           -w /tmp/$(basename "$PWD")
-           quay.io/ansible/molecule:latest
-           sudo molecule test
+          docker run --rm -it
+          --mount type=bind,source="$(pwd)",target=/tmp/$(basename "$PWD")
+          -v /var/run/docker.sock:/var/run/docker.sock
+          -w /tmp/$(basename "$PWD")
+          quay.io/ansible/molecule:3.0.8
+          molecule lint
+    - stage: build
+      env: image=debian version=9
+    - env: image=debian version=10
+    - env: image=ubuntu version=16.04
+    - env: image=ubuntu version=18.04
+    - env: image=ubuntu version=20.04
+    - env: image=ubuntu version=20.10
+    - env: image=fedora version=31
+    - env: image=fedora version=32
+
+script:
+  - >
+    travis_wait 20 sleep infinity & docker run --rm -it --env image=$image
+    --env version=$version
+    --mount type=bind,source="$(pwd)",target=/tmp/$(basename "$PWD")
+    -v /var/run/docker.sock:/var/run/docker.sock
+    -w /tmp/$(basename "$PWD")
+    quay.io/ansible/molecule:3.0.8
+    molecule test
 
 notifications:
   email:
     on_failure: change
     on_success: never
-  webhooks:
-    - https://galaxy.ansible.com/api/v1/notifications/

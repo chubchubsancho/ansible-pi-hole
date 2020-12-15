@@ -8,12 +8,33 @@
     - installation
     - check
 
-- name: "clone pihome repository"
+- name: "create pihole install directory"
+  file:
+    name: /etc/pihole
+    state: directory
+  when: pihole_installed.stat.isdir is undefined
+  tags:
+    - pihole
+    - installation
+    - prepare
+
+- name: "copy pihole setupVars"
+  template:
+    src: etc/pihole/setupVars.conf.j2
+    dest: /etc/pihole/setupVars.conf
+    mode: 0644
+  when: pihole_installed.stat.isdir is undefined
+  tags:
+    - pihole
+    - installation
+    - prepare
+
+- name: "clone pihole repository"
   git:
     repo: "{{ pi_hole_repo }}"
     clone: true
     depth: 1
-    dest: "{{ pi_hole_download_dir }}/{{ pi_hole_install_dir }}"
+    dest: "{{ pi_hole_install_dir }}"
     version: master
   when: pihole_installed.stat.isdir is undefined
   tags:
@@ -22,7 +43,9 @@
     - source
 
 - name: "install pihole"
-  command: bash basic-install.sh
+  become: true
+  command: bash basic-install.sh --unattended
   args:
-    chdir: "{{ pi_hole_download_dir }}/{{ pi_hole_install_dir }}/automated install"
+    chdir: "{{ pi_hole_install_dir }}/automated install"
+    creates: installed.txt
   when: pihole_installed.stat.isdir is undefined

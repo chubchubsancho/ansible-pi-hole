@@ -1,0 +1,31 @@
+{% if pi_hole_webpasswd is defined %}
+WEBPASSWORD={{ pi_hole_webpasswd }}
+{% endif %}
+DNSMASQ_LISTENING={{ pi_hole_dnsmasq_listening | default("single") }}
+DNS_FQDN_REQUIRED={{ pi_hole_fqdn_required | default(false) | lower }}
+DNS_BOGUS_PRIV={{ pi_hole_bogus_priv | default(false) | lower }}
+DNSSEC={{ pi_hole_dnssec | default(false) | lower }}
+BLOCKING_ENABLED={{ pi_hole_blocking_enabled | default(true) | lower }}
+PIHOLE_INTERFACE={{ ansible_default_ipv4.interface }}
+IPV4_ADDRESS={{ ansible_default_ipv4.address }}/24
+{% if ansible_default_ipv6.address is defined %}
+IPV6_ADDRESS={{ ansible_default_ipv6.address }}
+{% endif %}
+PIHOLE_DNS_1={{ pi_hole_dns_1 | default("8.8.8.8") }}#{{ pi_hole_dns_1_port | default("53") }}
+PIHOLE_DNS_2={{ pi_hole_dns_2 | default("8.8.4.4") }}#{{ pi_hole_dns_2_port | default("53") }}
+QUERY_LOGGING={{ pi_hole_query_logging | default(true) | lower }}
+INSTALL_WEB_SERVER={{ pi_hole_install_web_server | default(true) | lower }}
+INSTALL_WEB_INTERFACE={{ pi_hole_install_web_interface | default(true) | lower }}
+LIGHTTPD_ENABLED={{ pi_hole_enable_lighttpd | default(true) | lower }}
+{% if pi_hole_rev_server is defined %}
+REV_SERVER={{ pi_hole_rev_server }}
+{% endif %}
+{% if pi_hole_rev_server_domain is defined %}
+REV_SERVER_DOMAIN={{ pi_hole_rev_server_domain }}
+{% endif %}
+{% if pi_hole_rev_server_target is defined %}
+REV_SERVER_TARGET=1{{ pi_hole_rev_server_target }}
+{% endif %}
+{% if pi_hole_rev_server_cidr is defined %}
+REV_SERVER_CIDR={{ pi_hole_rev_server_cidr }}
+{% endif %}
