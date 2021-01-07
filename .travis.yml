@@ -48,3 +48,9 @@ notifications:
   email:
     on_failure: change
     on_success: never
+  webhooks:
+    if: branch = "master"
+    urls:
+      - https://galaxy.ansible.com/api/v1/notifications/
+    on_failure: change
+    on_success: always
