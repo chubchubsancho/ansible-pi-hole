@@ -24,7 +24,7 @@ REV_SERVER={{ pi_hole_rev_server }}
 REV_SERVER_DOMAIN={{ pi_hole_rev_server_domain }}
 {% endif %}
 {% if pi_hole_rev_server_target is defined %}
-REV_SERVER_TARGET=1{{ pi_hole_rev_server_target }}
+REV_SERVER_TARGET={{ pi_hole_rev_server_target }}
 {% endif %}
 {% if pi_hole_rev_server_cidr is defined %}
 REV_SERVER_CIDR={{ pi_hole_rev_server_cidr }}
