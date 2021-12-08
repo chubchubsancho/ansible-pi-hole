@@ -9,3 +9,13 @@
   tags:
     - pihole
     - configure
+
+- name: configure pi-hole local DNS records
+  template:
+    src: etc/pihole/custom.list.j2
+    dest: /etc/pihole/custom.list
+    mode: 0644
+  when: pi_hole_local_dns_records is defined and pi_hole_local_dns_records | length > 0
+  tags:
+    - pihole
+    - configure

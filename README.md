@@ -35,6 +35,19 @@ Add `pi-hole` variable for config. These vars can be omited
 * `pi_hole_rev_server_cidr` - (default: "") - `pi-hole` reverse cidr
 * `pi_hole_blocking_enabled` - (default: true) - enable `pi-hole` blocking
 
+## Define pi-hole local DNS configuration
+* `pi_hole_local_dns_records` - (default: "") - define `pi-hole` local DNS records. Expects a list of dictionnaries in which each items contains a key `ip` and `name`.
+
+Example:
+```yaml
+vars:
+  pi_hole_local_dns_records:
+    - name: db.lan
+      ip: 10.0.13.37
+    - name: web.lan
+      ip: 10.0.13.38
+```
+
 ## Define pi-hole FTL configuration
 
 Add `pi-hole-FTL` variable config. These vars can be omited
