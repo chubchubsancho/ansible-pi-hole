@@ -22,7 +22,7 @@ jobs:
           --mount type=bind,source="$(pwd)",target=/tmp/$(basename "$PWD")
           -v /var/run/docker.sock:/var/run/docker.sock
           -w /tmp/$(basename "$PWD")
-          quay.io/ansible/molecule:3.0.8
+          quay.io/ansible/toolset:3.5.0
           molecule lint
     - stage: build
       env: image=debian version=9
@@ -41,7 +41,7 @@ script:
     --mount type=bind,source="$(pwd)",target=/tmp/$(basename "$PWD")
     -v /var/run/docker.sock:/var/run/docker.sock
     -w /tmp/$(basename "$PWD")
-    quay.io/ansible/molecule:3.0.8
+    quay.io/ansible/toolset:3.5.0
     molecule test
 
 notifications:
