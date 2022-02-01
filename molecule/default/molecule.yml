@@ -11,7 +11,6 @@ lint: |
   set -e
   yamllint -c ./molecule/resources/rules/yamllint.yaml .
   ansible-lint .
-  flake8
 
 platforms:
   - name: "instance"
