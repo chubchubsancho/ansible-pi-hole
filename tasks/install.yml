@@ -33,8 +33,9 @@
   git:
     repo: "{{ pi_hole_repo }}"
     clone: true
+    depth: 20
     dest: "{{ pi_hole_install_dir }}"
-    version: master
+    version: HEAD
   when: pihole_installed.stat.isdir is undefined
   tags:
     - pihole
