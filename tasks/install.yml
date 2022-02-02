@@ -29,13 +29,13 @@
     - installation
     - prepare
 
-- name: "clone pihole repository"
+- name: "clone pihole repository revision '{{ pi_hole_version }}'"
   git:
     repo: "{{ pi_hole_repo }}"
     clone: true
     depth: 20
     dest: "{{ pi_hole_install_dir }}"
-    version: HEAD
+    version: "{{ pi_hole_version }}"
   when: pihole_installed.stat.isdir is undefined
   tags:
     - pihole
