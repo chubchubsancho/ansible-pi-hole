@@ -1,1 +1,3 @@
 ---
+# Revision of Pi-hole repository
+pi_hole_version: "HEAD"
