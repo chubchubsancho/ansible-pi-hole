@@ -32,3 +32,13 @@ REV_SERVER_TARGET={{ pi_hole_rev_server_target }}
 {% if pi_hole_rev_server_cidr is defined %}
 REV_SERVER_CIDR={{ pi_hole_rev_server_cidr }}
 {% endif %}
+{% if pi_hole_dhcp_active %}
+DHCP_ACTIVE=true
+DHCP_START={{ pi_hole_dhcp_start }}
+DHCP_END={{ pi_hole_dhcp_end }}
+DHCP_ROUTER={{ pi_hole_dhcp_router }}
+DHCP_LEASETIME={{ pi_hole_dhcp_leasetime | default(24) }}
+PIHOLE_DOMAIN={{ pi_hole_domain | default('lan') }}
+DHCP_IPv6={{ pi_hole_dhcp_ipv6 | default(false) | lower }}
+DHCP_rapid_commit={{ pi_hole_dhcp_rapid_commit | default(false) | lower }}
+{% endif %}

@@ -36,6 +36,17 @@ Add `pi-hole` variable for config. These vars can be omited
 * `pi_hole_rev_server_cidr` - (default: "") - `pi-hole` reverse cidr
 * `pi_hole_blocking_enabled` - (default: true) - enable `pi-hole` blocking
 
+## Define pi-hole dhcp configuration
+
+* `pi_hole_dhcp_active` - (default: false) - enable `pi-hole` dhcp server
+* `pi_hole_dhcp_start` - (default: "") - first ip address to hand out
+* `pi_hole_dhcp_end` - (default: "") - last ip address to hand out
+* `pi_hole_dhcp_router` - (default: "") - gateway ip address
+* `pi_hole_dhcp_leasetime` - (default: "24") - dhcp lease time
+* `pi_hole_domain` - (default: "lan") - `pi-hole` domain  name
+* `pi_hole_dhcp_ipv6` - (default: false) - enable IPv6 support
+* `pi_hole_dhcp_rapid_commit` - (default: false) - enable dhcp v4 rapid commit
+
 ## Define pi-hole local DNS configuration
 * `pi_hole_local_dns_records` - (default: "") - define `pi-hole` local DNS records. Expects a list of dictionnaries in which each items contains a key `ip` and `name`.
 
