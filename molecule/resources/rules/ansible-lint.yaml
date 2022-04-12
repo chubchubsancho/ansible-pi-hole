@@ -1,1 +1,6 @@
 ---
+exclude_paths:
+  - .github/
+
+mock_roles:
+  - pi_hole
