@@ -4,15 +4,27 @@ on:
   pull_request:
 
 jobs:
-  lint:
+  checkout:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - name: molecule lint
-        run: |
-          docker run --rm \
-          --mount type=bind,source="$(pwd)",target=/tmp/$(basename "$PWD") \
-          -v /var/run/docker.sock:/var/run/docker.sock \
-          -w /tmp/$(basename "$PWD") \
-          quay.io/ansible/toolset:3.5.0 \
-          molecule lint
+  lint:
+    runs-on: ubuntu-20.04
+    needs: checkout
+    container:
+      image: quay.io/ansible/toolset:3.5.0
+      env:
+        image: ubuntu
+        version: 20.04
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+        - ${{ github.workspace }}:/tmp/${{ github.workspace }}
+      options: --entrypoint mollecule lint --workdir /tmp/${{ github.workspace }}
+
+    # run: |
+    #   docker run --rm \
+    #   --mount type=bind,source="$(pwd)",target=/tmp/$(basename "$PWD") \
+    #   -v /var/run/docker.sock:/var/run/docker.sock \
+    #   -w /tmp/$(basename "$PWD") \
+    #   quay.io/ansible/toolset:3.5.0 \
+    #   molecule lint
