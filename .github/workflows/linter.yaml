@@ -21,8 +21,9 @@ jobs:
         - ${{ github.workspace }}:/tmp/${{ github.workspace }}
       options: --workdir /tmp/${{ github.workspace }}
     steps:
-      - name: mollecule lint
-        run: mollecule lint
+      - name: molecule lint
+        run: |
+          molecule lint
 
     # run: |
     #   docker run --rm \
