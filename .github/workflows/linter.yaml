@@ -19,7 +19,10 @@ jobs:
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
         - ${{ github.workspace }}:/tmp/${{ github.workspace }}
-      options: --entrypoint mollecule lint --workdir /tmp/${{ github.workspace }}
+      options: --workdir /tmp/${{ github.workspace }}
+    steps:
+      - name: mollecule lint
+        run: mollecule lint
 
     # run: |
     #   docker run --rm \
