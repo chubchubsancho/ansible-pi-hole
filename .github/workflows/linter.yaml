@@ -6,7 +6,6 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-20.04
-    needs: checkout
     container:
       image: quay.io/ansible/toolset:3.5.0
       env:
