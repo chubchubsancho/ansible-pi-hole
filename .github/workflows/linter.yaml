@@ -18,17 +18,8 @@ jobs:
         version: 20.04
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
-        - ${{ github.workspace }}:/tmp/${{ github.workspace }}
-      options: --workdir /tmp/${{ github.workspace }}
+      options: --volume ${{ github.workspace }}:/tmp/${{ github.workspace }}:Z --workdir /tmp/${{ github.workspace }}
     steps:
       - name: molecule lint
         run: |
           molecule lint
-
-    # run: |
-    #   docker run --rm \
-    #   --mount type=bind,source="$(pwd)",target=/tmp/$(basename "$PWD") \
-    #   -v /var/run/docker.sock:/var/run/docker.sock \
-    #   -w /tmp/$(basename "$PWD") \
-    #   quay.io/ansible/toolset:3.5.0 \
-    #   molecule lint
