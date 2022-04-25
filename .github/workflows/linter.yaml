@@ -16,9 +16,9 @@ jobs:
       env:
         image: ubuntu
         version: 20.04
-      volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
-      options: --volume ${{ github.workspace }}:/tmp/${{ github.workspace }}:Z --workdir /tmp/${{ github.workspace }}
+      # volumes:
+      #   - /var/run/docker.sock:/var/run/docker.sock
+      # options: --volume ${{ github.workspace }}:/tmp/${{ github.workspace }}:Z --workdir /tmp/${{ github.workspace }}
     steps:
       - name: molecule lint
         run: |
