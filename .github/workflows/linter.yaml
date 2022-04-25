@@ -7,7 +7,7 @@ jobs:
   lint:
     runs-on: ubuntu-20.04
     container:
-      image: quay.io/ansible/toolset:3.5.0
+      image: quay.io/ansible/creator-ee:v0.4.2
       env:
         image: ubuntu
         version: 20.04
