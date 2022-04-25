@@ -1,6 +1,6 @@
 ---
 - name: "install packages"
-  apt:
+  ansible.builtin.apt:
     name: "{{ pi_hole_prerequisites }}"
     state: present
     update_cache: true

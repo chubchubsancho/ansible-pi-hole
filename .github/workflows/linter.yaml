@@ -18,6 +18,4 @@ jobs:
       - uses: actions/checkout@v2
       - name: molecule lint
         run: |
-          pwd & \
-          ls -la . & \
           molecule lint
