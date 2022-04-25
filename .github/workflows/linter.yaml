@@ -22,4 +22,6 @@ jobs:
     steps:
       - name: molecule lint
         run: |
+          pwd & \
+          ls -la . & \
           molecule lint
