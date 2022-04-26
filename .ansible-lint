@@ -1,6 +1,10 @@
 ---
 exclude_paths:
+  - .cache/
   - .github/
+  - .git/
+
+use_default_rules: true
 
 mock_roles:
   - pi_hole
