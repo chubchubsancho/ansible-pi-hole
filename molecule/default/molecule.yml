@@ -9,8 +9,7 @@ driver:
 
 lint: |
   set -e
-  yamllint -c ./molecule/resources/rules/yamllint.yaml .
-  ansible-lint .
+  ansible-lint -q .
 
 platforms:
   - name: "instance"
