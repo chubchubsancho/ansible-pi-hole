@@ -4,7 +4,8 @@ on:
   pull_request: {}
 
 jobs:
-  lint:
+  test:
+    name: molecule test on ${{ matrix.image }} ${{ matrix.version }}
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
@@ -23,6 +24,6 @@ jobs:
         version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v2
-      - name: molecule test on ${{ matrix.image }} ${{ matrix.version }}
+      - name: molecule test
         run: |
           molecule test
