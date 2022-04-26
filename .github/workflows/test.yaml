@@ -1,0 +1,28 @@
+name: linter
+
+on:
+  pull_request: {}
+
+jobs:
+  lint:
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - ubuntu
+        version:
+          - 18.04
+          - 20.04
+          - 21.10
+          - 22.04
+    container:
+      image: quay.io/ansible/creator-ee:v0.4.2
+      env:
+        image: ${{ matrix.image }}
+        version: ${{ matrix.version }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: molecule test on ${{ matrix.image }} ${{ matrix.version }}
+        run: |
+          molecule test
