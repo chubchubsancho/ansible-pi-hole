@@ -26,4 +26,4 @@ jobs:
       - uses: actions/checkout@v2
       - name: molecule test
         run: |
-          molecule test
+          molecule --debug test
