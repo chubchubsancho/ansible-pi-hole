@@ -17,13 +17,12 @@ jobs:
           - 20.04
           - 21.10
           - 22.04
-    container:
-      image: quay.io/ansible/creator-ee:v0.4.2
-      env:
-        image: ${{ matrix.image }}
-        version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v2
+      - name: Setup Environment
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install molecule ansible-lint yamllint
       - name: molecule test
         run: |
-          molecule --debug test
+          molecule test
