@@ -4,4 +4,4 @@
   tasks:
     - name: "install pi-hole"
       import_role:
-        name: pi_hole
+        name: chubchubsancho.pi_hole
