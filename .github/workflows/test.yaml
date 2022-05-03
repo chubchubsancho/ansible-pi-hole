@@ -28,4 +28,4 @@ jobs:
           image: ${{ matrix.image }}
           version: ${{ matrix.version }}
         run: |
-          molecule test
+          molecule --debug test
