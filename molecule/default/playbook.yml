@@ -1,7 +1,0 @@
----
-- name: Converge
-  hosts: all
-  tasks:
-    - name: "install pi-hole"
-      import_role:
-        name: pi_hole
