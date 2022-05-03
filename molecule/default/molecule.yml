@@ -21,6 +21,11 @@ platforms:
       - container: docker
     groups:
       - "default"
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
 
 provisioner:
   log: true
