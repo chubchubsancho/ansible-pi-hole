@@ -44,17 +44,7 @@ provisioner:
 
 scenario:
   name: default
-  # test_sequence:
-  #   - destroy
-  #   - dependency
-  #   - syntax
-  #   - create
-  #   - prepare
-  #   - converge
-  #   - idempotence
-    # - side_effect
-    # - verify
-    # - destroy
 
 verifier:
-  name: testinfra
+  name: ansible
+  enabled: False
