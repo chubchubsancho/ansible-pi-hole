@@ -16,7 +16,6 @@ jobs:
           - "18.04"
           - "20.04"
           - "21.10"
-          - "22.04"
     steps:
       - uses: actions/checkout@v2
       - name: Setup Environment
