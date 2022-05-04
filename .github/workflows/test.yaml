@@ -10,30 +10,27 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image:
-          - ubuntu
-          - debian
-          - fedora
-          - centos
         include:
           - image: ubuntu
-            version:
-              - "18.04"
-              - "20.04"
-              - "21.10"
+            version: "18.04"
+          - image: ubuntu
+            version: "20.04"
+          - image: ubuntu
+            version: "21.10"
           - image: debian
-            version:
-              - "9"
-              - "10"
-              - "11"
+            version: "9"
+          - image: debian
+            version: "10"
+          - image: debian
+            version: "11"
           - image: fedora
-            version:
-              - "33"
-              - "34"
+            version: "33"
+          - image: fedora
+            version: "34"
           - image: centos
-            version:
-              - "7"
-              - "8"
+            version: "7"
+          - image: centos
+            version: "8"
     steps:
       - uses: actions/checkout@v2
       - name: Setup Environment
