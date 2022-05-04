@@ -27,10 +27,6 @@ jobs:
             version: "33"
           - image: fedora
             version: "34"
-          - image: centos
-            version: "7"
-          - image: centos
-            version: "8"
     steps:
       - uses: actions/checkout@v2
       - name: Setup Environment
