@@ -12,10 +12,28 @@ jobs:
       matrix:
         image:
           - ubuntu
-        version:
-          - "18.04"
-          - "20.04"
-          - "21.10"
+          - debian
+          - fedora
+          - centos
+        include:
+          - image: ubuntu
+            version:
+              - "18.04"
+              - "20.04"
+              - "21.10"
+          - image: debian
+            version:
+              - "9"
+              - "10"
+              - "11"
+          - image: fedora
+            version:
+              - "33"
+              - "34"
+          - image: centos
+            version:
+              - "7"
+              - "8"
     steps:
       - uses: actions/checkout@v2
       - name: Setup Environment
