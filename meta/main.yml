@@ -42,14 +42,18 @@ galaxy_info:
     - name: Debian
       versions:
         - stretch
-        - jessie
+        - buster
+        - bullseye
     - name: Ubuntu
       versions:
-        - xenial
-        - yakkety
-    - name: EL
+        - bionic
+        - focal
+        - impish
+    - name: Fedora
       versions:
-        - 7
+        - 33
+        - 34
+
 
   galaxy_tags:
     - pihole
