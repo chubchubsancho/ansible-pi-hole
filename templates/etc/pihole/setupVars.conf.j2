@@ -32,7 +32,7 @@ REV_SERVER_TARGET={{ pi_hole_rev_server_target }}
 {% if pi_hole_rev_server_cidr is defined %}
 REV_SERVER_CIDR={{ pi_hole_rev_server_cidr }}
 {% endif %}
-{% if pi_hole_dhcp_active %}
+{% if pi_hole_dhcp_active is defined and pi_hole_dhcp_active %}
 DHCP_ACTIVE=true
 DHCP_START={{ pi_hole_dhcp_start }}
 DHCP_END={{ pi_hole_dhcp_end }}

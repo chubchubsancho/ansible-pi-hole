@@ -1,6 +1,6 @@
 ---
 - name: configure pi-hole FTL
-  template:
+  ansible.builtin.template:
     src: etc/pihole/pihole-FTL.conf.j2
     dest: /etc/pihole/pihole-FTL.conf
     mode: 0644
@@ -11,7 +11,7 @@
     - configure
 
 - name: configure pi-hole local DNS records
-  template:
+  ansible.builtin.template:
     src: etc/pihole/custom.list.j2
     dest: /etc/pihole/custom.list
     mode: 0644

@@ -1,6 +1,6 @@
 ---
 - name: "install packages"
-  yum:
+  ansible.builtin.yum:
     name: "{{ pi_hole_prerequisites }}"
     state: present
     update_cache: true

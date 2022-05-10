@@ -4,4 +4,4 @@
   tasks:
     - name: "install pi-hole"
       import_role:
-        name: ansible-pi-hole
+        name: chubchubsancho.pi_hole

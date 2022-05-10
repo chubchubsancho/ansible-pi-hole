@@ -1,0 +1,41 @@
+name: test
+
+on:
+  pull_request: {}
+
+jobs:
+  test:
+    name: molecule test on ${{ matrix.image }} ${{ matrix.version }}
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image: ubuntu
+            version: "18.04"
+          - image: ubuntu
+            version: "20.04"
+          - image: ubuntu
+            version: "21.10"
+          - image: debian
+            version: "9"
+          - image: debian
+            version: "10"
+          - image: debian
+            version: "11"
+          - image: fedora
+            version: "33"
+          - image: fedora
+            version: "34"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Environment
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install molecule["docker"] ansible-lint yamllint
+      - name: molecule test
+        env:
+          image: ${{ matrix.image }}
+          version: ${{ matrix.version }}
+        run: |
+          molecule test

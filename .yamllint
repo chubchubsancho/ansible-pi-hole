@@ -1,0 +1,27 @@
+---
+extends: default
+
+rules:
+  braces:
+    forbid: non-empty
+    min-spaces-inside: 1
+    max-spaces-inside: 1
+    min-spaces-inside-empty: 0
+    max-spaces-inside-empty: 0
+  brackets:
+    forbid: non-empty
+    min-spaces-inside: 1
+    max-spaces-inside: 1
+    min-spaces-inside-empty: 0
+    max-spaces-inside-empty: 0
+  indentation:
+    spaces: 2
+    indent-sequences: consistent
+  line-length:
+    max: 160
+    level: warning
+    allow-non-breakable-inline-mappings: true
+  new-lines:
+    type: unix
+ignore: |
+  .github/

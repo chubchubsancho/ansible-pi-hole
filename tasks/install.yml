@@ -1,6 +1,6 @@
 ---
 - name: "check if pi-hole is already installed"
-  stat:
+  ansible.builtin.stat:
     path: "/opt/pihole"
   register: pihole_installed
   tags:
@@ -9,7 +9,7 @@
     - check
 
 - name: "create pihole config directory"
-  file:
+  ansible.builtin.file:
     name: /etc/pihole
     state: directory
   when: pihole_installed.stat.isdir is undefined
@@ -19,7 +19,7 @@
     - prepare
 
 - name: "copy pihole setupVars"
-  template:
+  ansible.builtin.template:
     src: etc/pihole/setupVars.conf.j2
     dest: /etc/pihole/setupVars.conf
     mode: 0644
@@ -30,7 +30,7 @@
     - prepare
 
 - name: "clone pihole repository revision '{{ pi_hole_version }}'"
-  git:
+  ansible.builtin.git:
     repo: "{{ pi_hole_repo }}"
     clone: true
     depth: 20
@@ -44,7 +44,7 @@
 
 - name: "install pihole"
   become: true
-  command: bash basic-install.sh --unattended
+  ansible.builtin.command: bash basic-install.sh --unattended
   args:
     chdir: "{{ pi_hole_install_dir }}/automated install"
     creates: installed.txt
