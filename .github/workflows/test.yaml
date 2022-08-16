@@ -15,16 +15,10 @@ jobs:
             version: "18.04"
           - image: ubuntu
             version: "20.04"
-          - image: ubuntu
-            version: "21.10"
-          - image: debian
-            version: "9"
           - image: debian
             version: "10"
           - image: debian
             version: "11"
-          - image: fedora
-            version: "33"
           - image: fedora
             version: "34"
     steps:
