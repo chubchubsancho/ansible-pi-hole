@@ -110,3 +110,4 @@ REGEX_DEBUGMODE=false|true Note that if one of them is set to true, the other on
 * `pi_hole_ftl_debug_dnsmasq_lines` - (default: false) - Print file and line causing a dnsmasq event into FTL's log files. This is handy to implement additional hooks missing from FTL.
 * `pi_hole_ftl_debug_vectors` - (default: false) - FTL uses dynamically allocated vectors for various tasks. This config option enables extensive debugging information such as information about allocation, referencing, deletion, and appending.
 * `pi_hole_ftl_debug_resolver` - (default: false) - Extensive information about hostname resolution like which DNS servers are used in the first and second hostname resolving tries (only affecting internally generated PTR queries).
+* `pi_hole_ftl_rate_limit` - (default: "1000/60") - Block clients making more than `x` queries (default 1000) within `y` seconds (default 60). Rate-limiting may be disabled altogether by setting both values to zero.
