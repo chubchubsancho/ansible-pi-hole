@@ -21,11 +21,6 @@ galaxy_info:
         - bionic
         - focal
         - impish
-    - name: Fedora
-      versions:
-        - 33
-        - 34
-
 
   galaxy_tags:
     - pihole
