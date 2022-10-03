@@ -17,8 +17,6 @@ platforms:
     image: "$image:$version"
     command: /sbin/init
     privileged: true
-    env:
-      container: docker
     groups:
       - "default"
     tmpfs:
