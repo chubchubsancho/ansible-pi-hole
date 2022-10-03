@@ -12,6 +12,7 @@
   ansible.builtin.file:
     name: /etc/pihole
     state: directory
+    mode: 0644
   when: pihole_installed.stat.isdir is undefined
   tags:
     - pihole
@@ -29,7 +30,7 @@
     - installation
     - prepare
 
-- name: Clone pihole repository revision '{{ pi_hole_version }}'
+- name: Clone pihole repository revision {{ pi_hole_version }}
   ansible.builtin.git:
     repo: "{{ pi_hole_repo }}"
     clone: true

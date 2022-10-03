@@ -8,19 +8,17 @@ galaxy_info:
 
   license: MIT
 
-  min_ansible_version: 2.7
+  min_ansible_version: "2.7"
 
   platforms:
     - name: Debian
       versions:
-        - stretch
         - buster
         - bullseye
     - name: Ubuntu
       versions:
-        - bionic
         - focal
-        - impish
+        - jammy
 
   galaxy_tags:
     - pihole
