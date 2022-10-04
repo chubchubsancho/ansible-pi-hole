@@ -1,7 +1,14 @@
-name: test
+name: molecule
 
 on:
-  pull_request: {}
+  pull_request:
+    paths:
+      - .github/molecule.yaml
+      - "!.github/**"
+      - "**"
+  push:
+    branches:
+      - master
 
 jobs:
   test:
