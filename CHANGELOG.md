@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.3](https://github.com/chubchubsancho/ansible-pi-hole/compare/v1.2.2...v1.2.3) (2022-10-04)
+
+
+### Continuous Integration
+
+* **molecule:** change event that trigger ([9552a11](https://github.com/chubchubsancho/ansible-pi-hole/commit/9552a11ffe6cb5e57b0d16e752ca793a0167e2cb))
+* **publish:** do not trigger on prereleased ([4d7d30a](https://github.com/chubchubsancho/ansible-pi-hole/commit/4d7d30a6b634f82d7a1a185c436388d7c9e31357))
+
 ## [1.2.2](https://github.com/chubchubsancho/ansible-pi-hole/compare/v1.2.1...v1.2.2) (2022-10-04)
 
 
