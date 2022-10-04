@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.4](https://github.com/chubchubsancho/ansible-pi-hole/compare/v1.2.3...v1.2.4) (2022-10-04)
+
+
+### Continuous Integration
+
+* **publish:** fix job name ([84510a5](https://github.com/chubchubsancho/ansible-pi-hole/commit/84510a532ce30181def9eae2ee223b9aa358cbb1))
+
+
+### Miscellaneous Chores
+
+* **README:** add badge ([7f61355](https://github.com/chubchubsancho/ansible-pi-hole/commit/7f61355442ad9fe49073ee41e00134fc9a1a7841))
+
 ## [1.2.3](https://github.com/chubchubsancho/ansible-pi-hole/compare/v1.2.2...v1.2.3) (2022-10-04)
 
 
