@@ -33,8 +33,6 @@ provisioner:
       group_vars: group_vars/
       host_vars: host_vars/
   playbooks:
-    # create: create.yml
-    # prepare: prepare.yml
     converge: ../resources/playbook.yml
   options:
     vvv: true
