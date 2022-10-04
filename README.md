@@ -1,6 +1,6 @@
 # ansible-pi-hole
 
-[![Build Status](https://travis-ci.com/chubchubsancho/ansible-pi-hole.svg?branch=master)](https://travis-ci.com/chubchubsancho/ansible-pi-hole)
+[![molecule](https://github.com/chubchubsancho/ansible-pi-hole/actions/workflows/molecule.yaml/badge.svg)](https://github.com/chubchubsancho/ansible-pi-hole/actions/workflows/molecule.yaml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?logo=github&style=flat)](https://raw.githubusercontent.com/chubchubsancho/ansible-pi-hole/master/LICENSE)
 
 An ansible role to install [Pi-Hole](https://pi-hole.net/)
@@ -48,9 +48,11 @@ Add `pi-hole` variable for config. These vars can be omited
 * `pi_hole_dhcp_rapid_commit` - (default: false) - enable dhcp v4 rapid commit
 
 ## Define pi-hole local DNS configuration
+
 * `pi_hole_local_dns_records` - (default: "") - define `pi-hole` local DNS records. Expects a list of dictionnaries in which each items contains a key `ip` and `name`.
 
 Example:
+
 ```yaml
 vars:
   pi_hole_local_dns_records:
