@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.2](https://github.com/chubchubsancho/ansible-pi-hole/compare/v1.2.1...v1.2.2) (2022-10-04)
+
+
+### Bug Fixes
+
+* **molecule:** fix molecule-docker version to 2.0.0 ([322fb02](https://github.com/chubchubsancho/ansible-pi-hole/commit/322fb0216397c18a7909c19eab01bf7cc7ee70cd))
+
+
+### Continuous Integration
+
+* **publish:** create import role workflow ([99ed6b8](https://github.com/chubchubsancho/ansible-pi-hole/commit/99ed6b86433632141a1c5c6ff35aeb6ae55e459a))
+
 ## [1.2.1](https://github.com/chubchubsancho/ansible-pi-hole/compare/v1.2.0...v1.2.1) (2022-09-12)
 
 
