@@ -24,7 +24,7 @@ jobs:
       - name: Setup Environment
         run: |
           python3 -m pip install --upgrade pip
-          python3 -m pip install molecule["docker"] ansible-lint yamllint
+          python3 -m pip install molecule molecule-docker==2.0.0 ansible-lint yamllint
       - name: molecule test
         env:
           image: ${{ matrix.image }}
