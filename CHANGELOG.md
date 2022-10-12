@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.5](https://github.com/chubchubsancho/ansible-pi-hole/compare/v1.2.4...v1.2.5) (2022-10-12)
+
+
+### Bug Fixes
+
+* **lint:** use fqdn for include_tasks ([c0da751](https://github.com/chubchubsancho/ansible-pi-hole/commit/c0da75120a940d9a9004045aceccbda58279ab62))
+
+
+### Continuous Integration
+
+* **release-please:** use PAT instead of GITHUB_TOKEN ([50f5b8c](https://github.com/chubchubsancho/ansible-pi-hole/commit/50f5b8ca941d8c0ccd8eec0626c90887737399df))
+
 ## [1.2.4](https://github.com/chubchubsancho/ansible-pi-hole/compare/v1.2.3...v1.2.4) (2022-10-04)
 
 
