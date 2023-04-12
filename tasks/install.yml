@@ -9,6 +9,7 @@
     - check
 
 - name: Create pihole config directory
+  become: true
   ansible.builtin.file:
     name: /etc/pihole
     state: directory
@@ -20,6 +21,7 @@
     - prepare
 
 - name: Copy pihole setupVars
+  become: true
   ansible.builtin.template:
     src: etc/pihole/setupVars.conf.j2
     dest: /etc/pihole/setupVars.conf
@@ -31,6 +33,7 @@
     - prepare
 
 - name: Clone pihole repository revision {{ pi_hole_version }}
+  become: true
   ansible.builtin.git:
     repo: "{{ pi_hole_repo }}"
     clone: true
