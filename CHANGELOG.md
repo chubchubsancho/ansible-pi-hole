@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.2.6](https://github.com/chubchubsancho/ansible-pi-hole/compare/v1.2.5...v1.2.6) (2023-04-12)
+
+
+### Bug Fixes
+
+* **configure:** add become true to task ([677d570](https://github.com/chubchubsancho/ansible-pi-hole/commit/677d570c7266e3a028954fa14ee4d93e42e74eca))
+* **handler:** add becom true ([606c4fc](https://github.com/chubchubsancho/ansible-pi-hole/commit/606c4fc7245b65e591546ede098ec031b1a19aca))
+* **install:** add become true to task ([0f6a60e](https://github.com/chubchubsancho/ansible-pi-hole/commit/0f6a60e66180eb6660208e45e6fe40fe37bb38c3))
+* **molecule:** add cgroupns_mode ([9b1e921](https://github.com/chubchubsancho/ansible-pi-hole/commit/9b1e921b33e527d7b09e4cf35c5a20c77956b05a))
+* **molecule:** do not use pre-build image ([710edfb](https://github.com/chubchubsancho/ansible-pi-hole/commit/710edfb181dce0fbce1d34d2f86f466871a5bdc0))
+* **pihole:** use generic service module ([68dc9f0](https://github.com/chubchubsancho/ansible-pi-hole/commit/68dc9f0e39da0169b712f2fbb293d0a6419254c1))
+* **prerequisite:** add become true to task ([e42501d](https://github.com/chubchubsancho/ansible-pi-hole/commit/e42501d2dc689ec6a940f3075fa7bf270c7f987d))
+
+
+### Continuous Integration
+
+* **molecule:** no more fix molecule-docker version ([e8370d1](https://github.com/chubchubsancho/ansible-pi-hole/commit/e8370d1fb3bfe9bee6bb2aa5cbb351e9bd02880d))
+
+
+### Miscellaneous Chores
+
+* **molecule:** use ansible user to run playbook ([6c98a1a](https://github.com/chubchubsancho/ansible-pi-hole/commit/6c98a1a1b7cd5752f80cfffa9f95006ccdda8872))
+
 ## [1.2.5](https://github.com/chubchubsancho/ansible-pi-hole/compare/v1.2.4...v1.2.5) (2022-10-12)
 
 
