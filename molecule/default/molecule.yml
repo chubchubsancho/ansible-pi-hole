@@ -16,6 +16,7 @@ platforms:
   - name: "instance"
     image: "$image:$version"
     command: /sbin/init
+    pre_build_image: false
     privileged: true
     groups:
       - "default"
@@ -38,9 +39,6 @@ provisioner:
     vvv: true
     dif: true
 
-scenario:
-  name: default
-
 verifier:
   name: ansible
-  enabled: False
+  enabled: false
