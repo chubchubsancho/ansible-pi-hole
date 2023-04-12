@@ -1,6 +1,7 @@
 ---
 # handlers file for ansible-pi-hole/
 - name: Restart pihole-FTL
+  become: true
   ansible.builtin.sysvinit:
     name: pihole-FTL
     state: restarted
