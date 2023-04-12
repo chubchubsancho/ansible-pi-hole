@@ -1,5 +1,6 @@
 ---
 - name: Configure pi-hole FTL
+  become: true
   ansible.builtin.template:
     src: etc/pihole/pihole-FTL.conf.j2
     dest: /etc/pihole/pihole-FTL.conf
@@ -11,6 +12,7 @@
     - configure
 
 - name: Configure pi-hole local DNS records
+  become: true
   ansible.builtin.template:
     src: etc/pihole/custom.list.j2
     dest: /etc/pihole/custom.list
