@@ -13,8 +13,10 @@ IPV4_ADDRESS={{ ansible_default_ipv4.address }}/24
 IPV6_ADDRESS={{ ansible_default_ipv6.address }}
 {% endif %}
 PIHOLE_DNS_1={{ pi_hole_dns_1 | default("8.8.8.8") }}#{{ pi_hole_dns_1_port | default("53") }}
-{% if pi_hole_dns_2 is defined and pi_hole_dns_2_port is defined %}
+{% if pi_hole_dns_2 is defined %}
 PIHOLE_DNS_2={{ pi_hole_dns_2 }}#{{ pi_hole_dns_2_port | default("53") }}
+{% else %}
+PIHOLE_DNS_2=
 {% endif %}
 QUERY_LOGGING={{ pi_hole_query_logging | default(true) | lower }}
 INSTALL_WEB_SERVER={{ pi_hole_install_web_server | default(true) | lower }}
