@@ -4,7 +4,7 @@
   ansible.builtin.file:
     name: /etc/pihole
     state: directory
-    mode: "0664"
+    mode: "0775"
   tags:
     - pihole
     - installation
