@@ -4,7 +4,7 @@
   ansible.builtin.template:
     src: etc/pihole/pihole-FTL.conf.j2
     dest: /etc/pihole/pihole-FTL.conf
-    mode: 0644
+    mode: 0640
   notify:
     - Restart pihole-FTL
   tags:
