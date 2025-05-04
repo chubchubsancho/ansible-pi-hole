@@ -350,3 +350,64 @@
     shmem = {{ pi_hole_misc_check_shmem | default(90) }}
 
     disk = {{ pi_hole_misc_check_disk | default(90) }}
+
+[debug]
+  database = {{ pi_hole_debug_database | default(false) }}
+
+  networking = {{ pi_hole_debug_networking | default(false) }}
+
+  locks = {{ pi_hole_debug_locks | default(false) }}
+
+  queries = {{ pi_hole_debug_queries | default(false) }}
+
+  flags = {{ pi_hole_debug_flags | default(false) }}
+
+  shmem = {{ pi_hole_debug_shmem | default(false) }}
+
+  gc = {{ pi_hole_debug_gc | default(false) }}
+
+  arp = {{ pi_hole_debug_arp | default(false) }}
+
+  regex = {{ pi_hole_debug_regex | default(false) }}
+
+  api = {{ pi_hole_debug_api | default(false) }}
+
+  tls = {{ pi_hole_debug_tls | default(false) }}
+
+  overtime = {{ pi_hole_debug_overtime | default(false) }}
+
+  status = {{ pi_hole_debug_status | default(false) }}
+
+  caps = {{ pi_hole_debug_caps | default(false) }}
+
+  dnssec = {{ pi_hole_debug_dnssec | default(false) }}
+
+  vectors = {{ pi_hole_debug_vectors | default(false) }}
+
+  resolver = {{ pi_hole_debug_resolver | default(false) }}
+
+  edns0 = {{ pi_hole_debug_edns0 | default(false) }}
+
+  clients = {{ pi_hole_debug_clients | default(false) }}
+
+  aliasclients = {{ pi_hole_debug_aliasclients | default(false) }}
+
+  events = {{ pi_hole_debug_events | default(false) }}
+
+  helper = {{ pi_hole_debug_helper | default(false) }}
+
+  config = {{ pi_hole_debug_config | default(false) }}
+
+  inotify = {{ pi_hole_debug_inotify | default(false) }}
+
+  webserver = {{ pi_hole_debug_webserver | default(false) }}
+
+  extra = {{ pi_hole_debug_extra | default(false) }}
+
+  reserved = {{ pi_hole_debug_reserved | default(false) }}
+
+  ntp = {{ pi_hole_debug_ntp | default(false) }}
+
+  netlink = {{ pi_hole_debug_netlink | default(false) }}
+
+  all = {{ pi_hole_debug_all | default(false) }}

@@ -286,3 +286,36 @@ pi_hole_webserver_acl: "+127.0.0.1,+[::1],-192.168.0.0/16"
 * `pi_hole_misc_check_load` - (default: true) -  Pi-hole is very lightweight on resources. Nevertheless, this does not mean that you should run Pi-hole on a server that is otherwise extremely busy as queuing on the system can lead to unnecessary delays in DNS operation as the system becomes less and less usable as the system load increases because all resources are permanently in use. To account for this, FTL regularly checks the system load. To bring this to your attention, FTL warns about excessive load when the 15 minute system load average exceeds the number of cores. This check can be disabled with this setting
 * `pi_hole_misc_check_load_shmem` - (default: 90) - FTL stores history in shared memory to allow inter-process communication with forked dedicated TCP workers. If FTL runs out of memory, it cannot continue to work as queries cannot be analyzed any further. Hence, FTL checks if enough shared memory is available on your system and warns you if this is not the case. By default, FTL warns if the shared-memory usage exceeds 90%. You can set any integer limit between 0 to 100 (interpreted as percentages) where 0 means that checking of shared-memory usage is disabled.
 * `pi_hole_misc_check_disk` - (default: 90) - FTL stores its long-term history in a database file on disk. Furthermore, FTL stores log files. By default, FTL warns if usage of the disk holding any crucial file exceeds 90%. You can set any integer limit between 0 to 100 (interpreted as percentages) where 0 means that checking of disk usage is disabled.
+
+## Define pi-hole debug configuration
+
+* `pi_hole_debug_database` - (default: false) -Print debugging information about database actions. This prints performed SQL statements as well as some general information such as the time it took to store the queries and how many have been saved to the database.
+* `pi_hole_debug_networking` - (default: false) - Prints a list of the detected interfaces on the startup of pihole-FTL. Also, prints whether these interfaces are IPv4 or IPv6 interfaces.
+* `pi_hole_debug_locks` - (default: false) - Print information about shared memory locks. Messages will be generated when waiting, obtaining, and releasing a lock.
+* `pi_hole_debug_queries` - (default: false) - Print extensive query information (domains, types, replies, etc.). This has always been part of the legacy debug mode of pihole-FTL.
+* `pi_hole_debug_flags` - (default: false) - Print flags of queries received by the DNS hooks. Only effective when is enabled as well.
+* `pi_hole_debug_shmem` - (default: false) - Print information about shared memory buffers. Messages are either about creating or enlarging shmem objects or string injections.
+* `pi_hole_debug_gc` - (default: false) - Print information about garbage collection (GC): What is to be removed, how many have been removed and how long did GC take.
+* `pi_hole_debug_arp` - (default: false) - Print information about ARP table processing: How long did parsing take, whether read MAC addresses are valid, and if the macvendor.db file exists.
+* `pi_hole_debug_regex` - (default: false) - Controls if FTLDNS should print extended details about regex matching into FTL.log.
+* `pi_hole_debug_api` - (default: false) - Print extra debugging information concerning API calls. This includes the request, the request parameters, and the internal details about how the algorithms decide which data to present and in what form. This very verbose output should only be used when debugging specific API issues and can be helpful, e.g., when a client cannot connect due to an obscure API error. Furthermore, this setting enables logging of all API requests (auth log) and details about user authentication attempts.
+* `pi_hole_debug_tls` - (default: false) - Print extra debugging information about TLS connections. This includes the TLS version, the cipher suite, the certificate chain and much more. This very verbose output should only be used when debugging specific TLS issues and can be helpful e.g., when a client cannot connect due to an obscure TLS error as modern browsers do not provide much information about the underlying TLS connection and most often give only very generic error messages without much/any underlying technical information.
+* `pi_hole_debug_overtime` - (default: false) - Print information about overTime memory operations, such as initializing or moving overTime slots.
+* `pi_hole_debug_status` - (default: false) - Print information about status changes for individual queries. This can be useful to identify unexpected unknown queries.
+* `pi_hole_debug_caps` : (default: false) - Print information about capabilities granted to the pihole-FTL process. The current capabilities are printed on receipt of SIGHUP, i.e., the current set of capabilities can be queried without restarting pihole-FTL (by setting DEBUG_CAPS=true and thereafter sending killall -HUP pihole-FTL).
+* `pi_hole_debug_dnssec` - (default: false) - Print information about DNSSEC activity.
+* `pi_hole_debug_vectors` - (default: false) - FTL uses dynamically allocated vectors for various tasks. This config option enables extensive debugging information such as information about allocation, referencing deletion, and appending.
+* `pi_hole_debug_resolver` - (default: false) - Extensive information about hostname resolution like which DNS servers are used in the first and second hostname resolving tries (only affecting internally generated PTR queries).
+* `pi_hole_debug_edns0` - (default: false) - Print debugging information about received EDNS(0) data.
+* `pi_hole_debug_clients` - (default: false) - Log various important client events such as change of interface (e.g., client switching from WiFi to wired or VPN connection), as well as extensive reporting about how clients were assigned to its groups.
+* `pi_hole_debug_aliasclients` - (default: false) -Log information related to alias-client processing.
+* `pi_hole_debug_events` - (default: false) - Log information regarding FTL's embedded event handling queue.
+* `pi_hole_debug_helper` - (default: false) - Log information about script helpers, e.g., due to dhcp-script.
+* `pi_hole_debug_config` - (default: false) - Print config parsing details.
+* `pi_hole_debug_inotify` - (default: false) - Debug monitoring of /etc/pihole filesystem events.
+* `pi_hole_debug_webserver` - (default: false) - Debug monitoring of the webserver (CivetWeb) events.
+* `pi_hole_debug_extra` - (default: false) - Temporary flag that may print additional information. This debug flag is meant to be used whenever needed for temporary investigations. The logged content may change without further notice at any time.
+* `pi_hole_debug_reserved` - (default: false) - Reserved debug flag.
+* `pi_hole_debug_ntp` - (default: false) - Print information about NTP synchronization.
+* `pi_hole_debug_netlink` - (default: false) - Print information about netlink communication and parsing.
+* `pi_hole_debug_all` - (default: false) - Set all debug flags at once. This is a convenience option to enable all debug flags at once. Note that this option is not persistent, setting it to true will enable all *remaining* debug flags but unsetting it will disable *all* debug flags.
