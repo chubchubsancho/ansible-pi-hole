@@ -152,3 +152,14 @@ pi_hole_dhcp_host:
 * `pi_hole_dhcp_ntp_sync_rtc_set` - (default: false) - Should FTL update a real-time clock (RTC) if available?
 * `pi_hole_dhcp_ntp_sync_rtc_device` - (default: "") - Path to the RTC device to update. Leave empty for auto-discovery. Possible values are: Path to the RTC device, e.g., "/dev/rtc0"
 * `pi_hole_dhcp_ntp_sync_rtc_utc` - (default: true) - Should the RTC be set to UTC?
+
+## Define pi-hole resolver configuration
+
+* `pi_hole_resolver_resolveipv4` - (default: true) - Should FTL try to resolve IPv4 addresses to hostnames?
+* `pi_hole_resolver_resolveipv6` - (default: true) - Should FTL try to resolve IPv6 addresses to hostnames?
+* `pi_hole_resolver_networknames` - (default: true) - Control whether FTL should use the fallback option to try to obtain client names from checking the network table. This behavior can be disabled with this option. Assume an IPv6 client without a host names. However, the network table knows - though the client's MAC address - that this is the same device where we have a host name for another IP address (e.g., a DHCP server managed IPv4 address). In this case, we use the host name associated to the other address as this is the same device.
+* `pi_hole_resolver_refreshnames` - (default: "IPV4_ONLY") - With this option, you can change how (and if) hourly PTR requests are made to check for changes in client and upstream server hostnames. Possible values are:
+  * "IPV4_ONLY" Do hourly PTR lookups only for IPv4 addresses. This is the new default since Pi-hole FTL v5.3.2. It should resolve issues with more and more very short-lived PE IPv6 addresses coming up in a lot of networks
+  * "ALL" Do hourly PTR lookups for all addresses. This was the default until FTL v5.3(.1). It has been replaced as it can create a lot of PTR queries for those with many IPv6 addresses in their networks.
+  * "UNKNOWN" Only resolve unknown hostnames. Already existing hostnames are never refreshed i.e., there will be no PTR queries made for clients where hostnames are known. This also means that known hostnames will not be updated once known
+  * "NONE" Don't do any hourly PTR lookups. This means we look host names up exactly once (when we first see a client) and never again. You may miss future changes of host names.
