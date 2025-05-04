@@ -1,0 +1,121 @@
+[dns]
+  {% if pi_hole_dns_upstreams is defined %}
+  upstreams = [
+    {% for upstream in pi_hole_dns_upstreams %}
+    "{{ upstream }}",
+    {% endfor %}
+  {% else %}
+  upstreams = []
+  {% endif %}
+
+  CNAMEdeepInspect = {{ pi_hole_dns_cname_deep_inspect | default(true) | lower }}
+
+  blockESNI = {{ pi_hole_dns_block_esni | default(true) | lower }}
+
+  EDNS0ECS = {{ pi_hole_dns_edns0ecs | default(true) | lower }}
+
+  ignoreLocalhost = {{ pi_hole_dns_ignore_localhost | default(false) | lower }}
+
+  showDNSSEC = {{ pi_hole_dns_show_dnssec | default(true) | lower }}
+
+  analyzeOnlyAandAAAA = {{ pi_hole_dns_analyze_only_a_and_aaaa | default(false) | lower }}
+
+  piholePTR = {{ pi_hole_dns_pihole_ptr | default("PI.HOLE") }}
+
+  replyWhenBusy = {{ pi_hole_dns_reply_when_busy | default("ALLOW") }}
+
+  blockTTL = {{ pi_hole_dns_block_ttl | default(2) }}
+
+  {% if pi_hole_dns_hosts is defined %}
+  hosts = [
+    {% for host in pi_hole_dns_hosts %}
+    "{{ host }}",
+    {% endfor %}
+  ]
+  {% else %}
+  hosts = []
+  {% endif %}
+
+  domainNeeded = {{ pi_hole_dns_domain_needed | default(false) | lower }}
+
+  expandHosts = {{ pi_hole_dns_expand_hosts | default(false) | lower }}
+
+  domain = {{ pi_hole_dns_domain | default("lan") | lower }}
+
+  bogusPriv = {{ pi_hole_dns_bogus_priv | default(true) | lower }}
+
+  dnssec = {{ pi_hole_dns_dnssec | default(false) | lower }}
+
+  interface = {{ pi_hole_dns_interface | default(ansible_default_ipv4.interface) | lower }}
+
+  hostRecord = {{ pi_hole_dns_host_record | default("") | lower }}
+
+  listeningMode = {{ pi_hole_dns_listening_mode | default("LOCAL") | lower }}
+
+  queryLogging = {{ pi_hole_dns_query_logging | default(true) | lower }}
+
+  {% if pi_hole_dns_cname_records is defined %}
+  cnameRecords = [
+  {% for cname_record in pi_hole_dns_cname_records %}
+    {{ cname_record }},
+  {% endfor %}
+  ]
+  {% else %}
+  cnameRecords = []
+  {% endif %}
+
+  port = {{ pi_hole_dns_port | default(53) }}
+
+  {% if pi_hole_dns_rev_servers is defined %}
+  revServers = [
+    {% for rev_server in pi_hole_dns_rev_servers %}
+    "{{ rev_server }}",
+    {% endfor %}
+  ]
+  {% else %}
+  revServers = []
+  {% endif %}
+
+  [dns.cache]
+    size = {{ pi_hole_dns_cache_size | default(10000) }}
+
+    optimizer = {{ pi_hole_dns_cache_optimizer | default(3600) }}
+
+    upstreamBlockedTTL = {{ pi_hole_dns_cache_upstream_blocked_ttl | default(86400) }}
+
+  [dns.blocking]
+    active = {{ pi_hole_dns_blocking_enabled | default(true) | lower }}
+
+    mode = {{ pi_hole_dns_blocking_mode | default("NULL") | upper }}
+
+    edns = {{ pi_hole_dns_blocking_edns | default("TEXT") | upper }}
+
+  [dns.specialDomains]
+    mozillaCanary = {{ pi_hole_dns_special_domain_mozilla_canary | default(true) | lower }}
+
+    iCloudPrivateRelay = {{ pi_hole_dns_special_domain_icloud_private_relay | default(true) | lower }}
+
+    designatedResolver = {{ pi_hole_dns_special_domain_designated_resolver | default(true) | lower }}
+
+    [dns.reply.host]
+      force4 = {{ pi_hole_dns_reply_host_force4 | default(false) | lower }}
+
+      IPv4 = {{ pi_hole_dns_reply_host_ipv4 | default("") }}
+
+      force6 = {{ pi_hole_dns_reply_host_force6 | default(false) | lower }}
+
+      IPv6 = {{ pi_hole_dns_reply_host_ipv6 | default("") }}
+
+    [dns.reply.blocking]
+      force4 = {{ pi_hole_dns_blocking_force4 | default(false) | lower }}
+
+      IPv4 = {{ pi_hole_dns_blocking_ipv4 | default("") }}
+
+      force6 = {{ pi_hole_dns_blocking_force6 | default(false) | lower }}
+
+      IPv6 = {{ pi_hole_dns_blocking_ipv6 | default("") }}
+
+  [dns.rateLimit]
+    count = {{ pi_hole_dns_rate_limit_count | default(1000) }}
+
+    interval = {{ pi_hole_dns_rate_limit_interval | default(60) }}
