@@ -318,3 +318,35 @@
     ftl = {{ pi_hole_files_log_ftl | default("/var/log/pihole/FTL.log") }}
 
     webserver = {{ pi_hole_files_log_webserver | default("/var/log/pihole.log") }}
+
+[misc]
+  privacylevel = {{ pi_hole_misc_privacylevel | default(0) }}
+
+  delay_startup = {{ pi_hole_misc_delay_startup | default(0) }}
+
+  nice = {{ pi_hole_misc_nice | default(-10) }}
+
+  addr2line = {{ pi_hole_misc_addr2line | default(true) }}
+
+  etc_dnsmasq_d = {{ pi_hole_misc_etc_dnsmasq_d | default(false) }}
+
+  {% if pi_hole_misc_dnsmasq_lines is defined %}
+  dnsmasq_lines = [
+    {% for line in pi_hole_misc_dnsmasq_lines %}
+    "{{ line }}",
+    {% endfor %}
+  ]
+  {% else %}
+  dnsmasq_lines = []
+  {% endif %}
+
+  extraLogging = {{ pi_hole_misc_extralogging | default(false) }}
+
+  readOnly = {{ pi_hole_misc_readonly | default(false) }}
+
+  [misc.check]
+    load = {{ pi_hole_misc_check_load | default(true) }}
+
+    shmem = {{ pi_hole_misc_check_shmem | default(90) }}
+
+    disk = {{ pi_hole_misc_check_disk | default(90) }}
