@@ -201,3 +201,99 @@
     parseARPcache = {{ pi_hole_database_network_parsearpcache | default(true) }}
 
     expire = {{ pi_hole_database_network_expire | default(91) }}
+
+[webserver]
+  domain = {{ pi_hole_webserver_domain | default("pi.hole") }}
+
+  acl = {{ pi_hole_webserver_acl | default("") }}
+
+  port = {{ pi_hole_webserver_port | default("80o,443os,[::]:80o,[::]:443os") }}
+
+  threads = {{ pi_hole_webserver_threads | default(50) }}
+
+  {% if pi_hole_webserver_headers is defined %}
+  headers = [
+    {% for header in pi_hole_webserver_headers %}
+    "{{ header }}",
+    {% endfor %}
+  ]
+  {% else %}
+  headers = [
+    "X-DNS-Prefetch-Control: off",
+    "Content-Security-Policy: default-src 'self' 'unsafe-inline';",
+    "X-Frame-Options: DENY",
+    "X-XSS-Protection: 0",
+    "X-Content-Type-Options: nosniff",
+    "Referrer-Policy: strict-origin-when-cross-origin"
+  ]
+  {% endif %}
+
+  serve_all = {{ pi_hole_webserver_serve_all | default(false) }}
+
+  [webserver.session]
+    timeout = {{ pi_hole_webserver_session_timeout | default(1800) }}
+
+    restore = {{ pi_hole_webserver_session_restore | default(true) }}
+
+  [webserver.tls]
+    cert = {{ pi_hole_webserver_tls_cert | default("/etc/pihole/tls.pem") }}
+
+  [webserver.paths]
+    webroot = {{ pi_hole_webserver_paths_webroot | default("/var/www/html/") }}
+
+    webhome = {{ pi_hole_webserver_paths_webhome | default("/admin/") }}
+
+    prefix = {{ pi_hole_webserver_paths_prefix | default("") }}
+
+  [webserver.interface]
+    boxed = {{ pi_hole_webserver_interface_boxed | default(true) }}
+
+    theme = {{ pi_hole_webserver_interface_theme | default("default-auto") }}
+
+  [webserver.api]
+    max_sessions = {{ pi_hole_webserver_api_max_sessions | default(16) }}
+
+    prettyJSON = {{ pi_hole_webserver_api_prettyjson | default(false) }}
+
+    pwhash = {{ pi_hole_webserver_api_pwhash | default("") }}
+
+    totp_secret = {{ pi_hole_webserver_api_totp_secret | default("") }}
+
+    app_pwhash = {{ pi_hole_webserver_api_app_pwhash | default("") }}
+
+    app_sudo = {{ pi_hole_webserver_api_app_sudo | default(false) }}
+
+    cli_pw = {{ pi_hole_webserver_api_cli_pw | default(true) }}
+
+    {% if pi_hole_webserver_api_excludeclients is defined %}
+    excludeClients = [
+      {% for client in pi_hole_webserver_api_excludeclients %}
+      "{{ client }}",
+      {% endfor %}
+    ]
+    {% else %}
+    excludeClients = []
+    {% endif %}
+
+    {% if pi_hole_webserver_api_excludedomains is defined %}}
+    excludeDomains = [
+      {% for domain in pi_hole_webserver_api_excludedomains %}
+      "{{ domain }}",
+      {% endfor %}
+    ]
+    {% else %}
+    excludeDomains = []
+    {% endif %}
+
+    maxHistory = {{ pi_hole_webserver_api_max_history | default(86400) }}
+
+    maxClients = {{ pi_hole_webserver_api_max_clients | default(10) }}
+
+    client_history_global_max = {{ pi_hole_webserver_api_client_history_global_max | default(true) }}
+
+    allow_destructive = {{ pi_hole_webserver_api_allow_destructive | default(true) }}
+
+    [webserver.api.temp]
+      limit = {{ pi_hole_webserver_api_temp_limit | default(60.000000) }}
+
+      unit = {{ pi_hole_webserver_api_temp_unit | default("C") }}
