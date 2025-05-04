@@ -178,3 +178,12 @@
       device = {{ pi_hole_dhcp_ntp_sync_rtc_device | default("") }}
 
       utc = {{ pi_hole_dhcp_ntp_sync_rtc_utc | default(true) }}
+
+[resolver]
+  resolveIPv4 = {{ pi_hole_resolver_resolveipv4 | default(true) }}
+
+  resolveIPv6 = {{ pi_hole_resolver_resolveipv6 | default(true) }}
+
+  networkNames = {{ pi_hole_resolver_networknames | default(true) }}
+
+  refreshNames = {{ pi_hole_resolver_refreshnames | default("IPV4_ONLY") }}
