@@ -187,3 +187,17 @@
   networkNames = {{ pi_hole_resolver_networknames | default(true) }}
 
   refreshNames = {{ pi_hole_resolver_refreshnames | default("IPV4_ONLY") }}
+
+[database]
+  DBimport = {{ pi_hole_database_dbimport | default(true) }}
+
+  maxDBdays = {{ pi_hole_database_maxdbdays | default(91) }}
+
+  DBinterval = {{ pi_hole_database_dbinterval | default(60) }}
+
+  useWAL = {{ pi_hole_database_usewal | default(true) }}
+
+  [database.network]
+    parseARPcache = {{ pi_hole_database_network_parsearpcache | default(true) }}
+
+    expire = {{ pi_hole_database_network_expire | default(91) }}

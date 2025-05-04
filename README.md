@@ -163,3 +163,12 @@ pi_hole_dhcp_host:
   * "ALL" Do hourly PTR lookups for all addresses. This was the default until FTL v5.3(.1). It has been replaced as it can create a lot of PTR queries for those with many IPv6 addresses in their networks.
   * "UNKNOWN" Only resolve unknown hostnames. Already existing hostnames are never refreshed i.e., there will be no PTR queries made for clients where hostnames are known. This also means that known hostnames will not be updated once known
   * "NONE" Don't do any hourly PTR lookups. This means we look host names up exactly once (when we first see a client) and never again. You may miss future changes of host names.
+
+## Define pi-hole database configuration
+
+* `pi_hole_database_dbimport` - (default: true) - Should FTL load information from the database on startup to be aware of the most recent history?
+* `pi_hole_database_maxdbdays` - (default: 91) - How long should queries be stored in the database [days]? Setting this value to 0 will disable the database.
+* `pi_hole_database_dbinterval` - (default: 60) - How often do we store queries in FTL's database [seconds]?
+* `pi_hole_database_usewal` - (default: true) - Should FTL enable Write-Ahead Log (WAL) mode for the on-disk query database (configured via files.database)? It is recommended to leave this setting enabled for performance reasons. About the only reason to disable WAL mode is if you are experiencing specific issues with it e.g., when using a database that is accessed from multiple hosts via a network share. When this setting is disabled, FTL will use SQLite3's default journal mode (rollback journal in DELETE mode).
+* `pi_hole_database_network_parsearpcache` - (default: true) - Should FTL analyze the local ARP cache? When disabled, client identification and the network table will stop working reliably.
+* `pi_hole_database_network_expire` - (default: 91) - How long should IP addresses be kept in the network_addresses table [days]? IP addresses (and associated host names) older than the specified number of days are removed to avoid dead entries in the network overview table.
