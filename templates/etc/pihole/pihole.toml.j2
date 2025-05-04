@@ -119,3 +119,62 @@
     count = {{ pi_hole_dns_rate_limit_count | default(1000) }}
 
     interval = {{ pi_hole_dns_rate_limit_interval | default(60) }}
+
+[dhcp]
+  active = {{ pi_hole_dhcp_active | default(false) | lower }}
+
+  start = {{ pi_hole_dhcp_start | default("") }}
+
+  end = {{ pi_hole_dhcp_end | default("") }}
+
+  router = {{ pi_hole_dhcp_router | default("") }}
+
+  netmask = {{ pi_hole_dhcp_netmask | default("") }}
+
+  leaseTime = {{ pi_hole_dhcp_leasetime | default("24h") }}
+
+  ipv6 = {{ pi_hole_dhcp_ipv6 | default(false) }}
+
+  rapidCommit = {{ pi_hole_dhcp_rapid_commit | default(false) }}
+
+  multiDNS = {{ pi_hole_dhcp_multidns | default(false) }}
+
+  logging = {{ pi_hole_dhcp_logging | default(false) }}
+
+  ignoreUnknownClients = {{ pi_hole_dhcp_ignoreunknownclients | default(false) }}
+
+  {% if pi_hole_dhcp_hosts is defined %}
+  hosts = [
+  {% for host in pi_hole_dhcp_hosts %}
+    "{{ host }}",
+  {% endfor %}
+  ]
+  {% else %}
+  hosts = []
+  {% endif %}
+
+  [ntp.ipv4]
+    active = {{ pi_hole_dhcp_ntp_ipv4_active | default(true) }}
+
+    address = {{ pi_hole_dhcp_ntp_ipv4_address | default("") }}
+
+  [ntp.ipv6]
+    active = {{ pi_hole_dhcp_ntp_ipv6_active | default(true) }}
+
+    address = {{ pi_hole_dhcp_ntp_ipv6_address | default("") }}
+
+  [ntp.sync]
+    active = {{ pi_hole_dhcp_ntp_sync_active | default(true) }}
+
+    server = {{ pi_hole_dhcp_ntp_sync_server | default("pool.ntp.org") }}
+
+    interval = {{ pi_hole_dhcp_ntp_sync_interval | default(3600) }}
+
+    count = {{ pi_hole_dhcp_ntp_sync_count | default(8) }}
+
+    [ntp.sync.rtc]
+      set = {{ pi_hole_dhcp_ntp_sync_rtc_set | default(false) }}
+
+      device = {{ pi_hole_dhcp_ntp_sync_rtc_device | default("") }}
+
+      utc = {{ pi_hole_dhcp_ntp_sync_rtc_utc | default(true) }}
