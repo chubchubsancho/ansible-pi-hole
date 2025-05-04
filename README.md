@@ -255,3 +255,16 @@ pi_hole_webserver_acl: "+127.0.0.1,+[::1],-192.168.0.0/16"
   * "C" Celsius
   * "F" Fahrenheit
   * "K" Kelvin
+
+## Define pi-hole files configuration
+
+* `pi_hole_files_pid` - (default: "/run/pihole-FTL.pid") - The file which contains the PID of FTL's main process. Possible values are \<any writable file\>
+* `pi_hole_files_database` - (default: "/etc/pihole/pihole-FTL.db") - The location of FTL's long-term database. Possible values are \<any FTL database\>
+* `pi_hole_files_gravity` - (default:"/etc/pihole/gravity.db") -The location of Pi-hole's gravity database. Possible values are \<any Pi-hole gravity database\>
+* `pi_hole_files_gravity_tmp` - (default: "/tmp") - A temporary directory where Pi-hole can store files during gravity updates. This directory must be writable by the user running gravity (typically pihole). Possible values are \<any existing world-writable writable directory\>
+* `pi_hole_files_macvendor` - (default: "/etc/pihole/macvendor.db") - The database containing MAC -> Vendor information for the network table. Possible values are \<any Pi-hole macvendor database\>
+* `pi_hole_files_setupVars` - (default: "/etc/pihole/setupVars.conf") - The old config file of Pi-hole used before v6.0. Possible values are \<any Pi-hole setupVars file\>
+* `pi_hole_files_pcap` - (default: "") - An optional file containing a pcap capture of the network traffic. This file is used for debugging purposes only. If you don't know what this is, you don't need it. Setting this to an empty string disables pcap recording. The file must be writable by the user running FTL (typically pihole). Failure to write to this file will prevent the DNS resolver from starting. The file is appended to if it already exists. Possible values are \<any writable pcap file\>
+* `pi_hole_files_log_ftl` - (default: "/var/log/pihole/FTL.log") - # The location of FTL's log file. Possible values are \<any writable file\>
+* `pi_hole_files_log_dnsmasq` - (default: "/var/log/pihole/pihole.log") - The log file used by the embedded dnsmasq DNS server. Possible values are \<any writable file\>
+* `pi_hole_files_log_webserver` - (default: "/var/log/pihole/webserver.log") - The log file used by the webserver. Possible values are \<any writable file\>

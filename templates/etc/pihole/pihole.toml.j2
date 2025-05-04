@@ -297,3 +297,24 @@
       limit = {{ pi_hole_webserver_api_temp_limit | default(60.000000) }}
 
       unit = {{ pi_hole_webserver_api_temp_unit | default("C") }}
+
+[files]
+  pid = {{ pi_hole_files_pid | default("run/pihole-FTL.pid") }}
+
+  database = {{ pi_hole_files_database | default("etc/pihole/pihole-FTL.db") }}
+
+  gravity = {{ pi_hole_files_gravity | default("/etc/pihole/gravity.db") }}
+
+  gravity_tmp = {{ pi_hole_files_gravity_tmp | default("/tmp") }}
+
+  macvendor = {{ pi_hole_files_macvendor | default("/etc/pihole/macvendor.db") }}
+
+  setupVars = {{ pi_hole_files_setupvars | default("/etc/pihole/setupVars.conf") }}
+
+  pcap = {{ pi_hole_files_pcap | default("") }}
+
+  [files.log]
+
+    ftl = {{ pi_hole_files_log_ftl | default("/var/log/pihole/FTL.log") }}
+
+    webserver = {{ pi_hole_files_log_webserver | default("/var/log/pihole.log") }}
