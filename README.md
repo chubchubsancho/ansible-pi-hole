@@ -172,3 +172,86 @@ pi_hole_dhcp_host:
 * `pi_hole_database_usewal` - (default: true) - Should FTL enable Write-Ahead Log (WAL) mode for the on-disk query database (configured via files.database)? It is recommended to leave this setting enabled for performance reasons. About the only reason to disable WAL mode is if you are experiencing specific issues with it e.g., when using a database that is accessed from multiple hosts via a network share. When this setting is disabled, FTL will use SQLite3's default journal mode (rollback journal in DELETE mode).
 * `pi_hole_database_network_parsearpcache` - (default: true) - Should FTL analyze the local ARP cache? When disabled, client identification and the network table will stop working reliably.
 * `pi_hole_database_network_expire` - (default: 91) - How long should IP addresses be kept in the network_addresses table [days]? IP addresses (and associated host names) older than the specified number of days are removed to avoid dead entries in the network overview table.
+
+## Define pi-hole webserver configuration
+
+* `pi_hole_webserver_domain` - (default: "pi.hole") - On which domain is the web interface served? Possible values are \<valid domain\>
+* `pi_hole_webserver_acl` - (default: "") -Webserver access control list (ACL) allowing for restrictions to be put on the list of IP addresses which have access to the web server. The ACL is a comma separated list of IP subnets, where each subnet is prepended by either a - or a + sign. A plus sign means allow, where a minus sign means deny. If a subnet mask is omitted, such as -1.2.3.4, this means to deny only that single IP address. If this value is not set (empty string), all accesses are allowed. Otherwise, the default setting is to deny all accesses. On each request the full list is traversed, and the last (!) match wins. IPv6 addresses may be specified in CIDR-form [a:b::c]/64. Possible values are \<valid ACL\>. Examples:
+
+```yaml
+pi_hole_webserver_acl: "+127.0.0.1,+[::1],-192.168.0.0/16"
+```
+
+* `pi_hole_webserver_port` - (default: "80o,443os,[::]:80o,[::]:443os") - Ports to be used by the webserver. Comma-separated list of ports to listen on. It is possible to specify an IP address to bind to. In this case, an IP address and a colon must be prepended to the port number. For example, to bind to the loopback interface on port 80 (IPv4) and to all interfaces port 8080 (IPv4), use "127.0.0.1:80,8080". "[::]:80" can be used to listen to IPv6 connections to port 80. IPv6 addresses of network interfaces can be specified as well, e.g. "[::1]:80" for the IPv6 loopback interface. [::]:80 will bind to port 80 IPv6 only. In order to use port 80 for all interfaces, both IPv4 and IPv6, use either the configuration "80,[::]:80" (create one socket for IPv4 and one for IPv6 only), or "+80" (create one socket for both, IPv4 and IPv6). The '+' notation to use IPv4 and IPv6 will only work if no network interface is specified. Depending on your operating system version and IPv6 network environment, some configurations might not work as expected, so you have to test to find the configuration most suitable for your needs. In case "+80" does not work for your environment, you need to use "80,[::]:80". If the port is TLS/SSL, a letter 's' (secure) must be appended, for example "80,443s" will open port 80 and port 443, and connections on port 443 will be encrypted. For non-encrypted ports, it is allowed to append letter 'r' (as in redirect). Redirected ports will redirect all their traffic to the first configured SSL port. For example, if webserver.port is "80r,443s", then all HTTP traffic coming at port 80 will be redirected to HTTPS port 443. When specifying 'o' (optional) behind a port, inability to use this port is not considered an error. For instance, specifying "80o,8080o" will allow the webserver to listen on either 80, 8080, both or even none of the two ports. This flag may be combined with 'r' and 's' like "80or,443os,8080,4443s" (80 redirecting to SSL if available, 443 encrypted if available, 8080 mandatory and unencrypted, 4443 mandatory and encrypted). If this value is not set (empty string), the web server will not be started and hence, the API will not be available. Possible values are comma-separated list of \<[ip_address:]port\>.
+* `pi_hole_webserver_threads` - (default: 50) -Maximum number of worker threads allowed. The Pi-hole web server handles each incoming connection in a separate thread. Therefore, the value of this option is effectively the number of concurrent HTTP connections that can be handled. Any other connections are queued until they can be processed by a unoccupied thread The total number of threads you see may be lower than the configured value as threads are only created when needed due to incoming connections. The value 0 means the number of threads is 50 (as per default settings of CivetWeb) for backwards-compatible behavior.
+* `pi_hole_webserver_headers` - (default: [ "X-DNS-Prefetch-Control: off", "Content-Security-Policy: default-src 'self' 'unsafe-inline';", "X-Frame-Options: DENY", "X-XSS-Protection: 0", "X-Content-Type-Options: nosniff", "Referrer-Policy: strict-origin-when-cross-origin" ]) - Additional HTTP headers added to the web server responses. The headers are added to all responses, including those for the API. Note about the default additional headers:
+  * X-DNS-Prefetch-Control: off: Usually browsers proactively perform domain name resolution on links that the user may choose to follow. We disable DNS prefetching here.
+  * Content-Security-Policy: [...] 'unsafe-inline' is both required by Chart.js styling some elements directly, and index.html containing some inlined Javascript code.
+  * X-Frame-Options: DENY: The page can not be displayed in a frame, regardless of the site attempting to do so
+  * X-Xss-Protection: 0: Disables XSS filtering in browsers that support it. This header is usually enabled by default in browsers, and is not recommended as it can hurt the security of the site [https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection]
+  * X-Content-Type-Options: nosniff: Marker used by the server to indicate that the MIME types advertised in the  Content-Type headers should not be changed and be followed. This allows to opt-out of MIME type sniffing, or, in other words, it is a way to say that the webmasters knew what they were doing. Site security testers usually expect this header to be set.
+  * Referrer-Policy: strict-origin-when-cross-origin: A referrer will be sent for same-site origins, but cross-origin requests will send no referrer information.
+
+  The latter four headers are set as expected by <https://securityheaders.io>. Possible values are array of HTTP headers.
+
+* `pi_hole_webserver_serve_all` - (default: false) - Should the web server serve all files in webserver.paths.webroot directory? If disabled, only files within the path defined through webserver.paths.webhome and /api will be served.
+* `pi_hole_webserver_session_timeout` - (default: 1800) - Session timeout in seconds. If a session is inactive for more than this time, it will be terminated. Sessions are continuously refreshed by the web interface, preventing sessions from timing out while the web interface is open. This option may also be used to make logins persistent for long times, e.g. 86400 seconds (24 hours), 604800 seconds (7 days) or 2592000 seconds (30 days). Note that the total number of concurrent sessions is limited so setting this value too high may result in users being rejected and unable to log in if there are already too many sessions active.
+* `pi_hole_webserver_session_restore` - (default: true) - Should Pi-hole backup and restore sessions from the database? This is useful if you want to keep your sessions after a restart of the web interface.
+* `pi_hole_webserver_tls_cert` - (default: "/etc/pihole/tls.pem") - Path to the TLS (SSL) certificate file. All directories along the path must be readable and accessible by the user running FTL (typically 'pihole'). This option is only required when at least one of webserver.port is TLS. The file must be in PEM format, and it must have both, private key and certificate (the *.pem file created must contain a 'CERTIFICATE' section as well as a 'RSA PRIVATE KEY' section). The \*.pem file can be created using cp server.crt server.pem cat server.key >> server.pem if you have these files instead. Possible values are \<valid TLS certificate file (*.pem)\>
+* `pi_hole_webserver_paths_webroot` - (default: "/var/www/html") - Server root on the host. Possible values are \<valid path\>
+* `pi_hole_webserver_paths_webhome` - (default: "/admin/") - Sub-directory of the root containing the web interface. Possible values are \<valid subpath\>, both slashes are needed.
+* `pi_hole_webserver_paths_prefix` - (default: "") - Prefix where the web interface is served. This is useful when you are using a reverse proxy serving the web interface, e.g at http://\<ip\>/pihole/admin/ instead of http://\<ip\>/admin/. In this example, the prefix would be "/pihole". Note that the prefix has to be stripped away by the reverse proxy, e.g., for traefik:
+  * traefik.http.routers.pihole.rule=PathPrefix(`/pihole`)
+  * traefik.http.middlewares.piholehttp.stripprefix.prefixes=/pihole
+
+  The prefix should start with a slash. If you don't use a prefix, leave this field empty. Setting this field to an incorrect value may result in the web interface not being accessible. Don't use this setting if you are not using a reverse proxy. Possible values are valid URL prefix or empty.
+* `pi_hole_webserver_boxed` - (default: true) -Should the web interface use the boxed layout?
+* `pi_hole_webserver_interface` - (default: "default-auto") - Theme used by the Pi-hole web interface. Possible values are:
+  * "default-auto". Pi-hole auto
+  * "default-light". Pi-hole day
+  * "default-dark". Pi-hole midnight
+  * "default-darker". Pi-hole deep-midnight
+  * "high-contrast". High-contrast light
+  * "high-contrast-dark". High-contrast dark
+  * "lcars". Star Trek LCARS
+* `pi_hole_webserver_api_max_sessions` - (default: 16) - Number of concurrent sessions allowed for the API. If the number of sessions exceeds this value, no new sessions will be allowed until the number of sessions drops due to session expiration or logout. Note that the number of concurrent sessions is irrelevant if authentication is disabled as no sessions are used in this case.
+* `pi_hole_webserver_api_prettyjson` - (default: false) -Should FTL prettify the API output (add extra spaces, newlines and indentation)?
+* `pi_hole_webserver_api_pwhash` - (default: "") - API password hash. Possible values are \<valid Pi-hole password hash\>
+* `pi_hole_webserver_api_totp_secret` - (default: "") - Pi-hole 2FA TOTP secret. When set to something different than "", 2FA authentication will be enforced for the API and the web interface. This setting is write-only, you can not read the secret back. Possible values are \<valid TOTP secret (20 Bytes in Base32 encoding)\>
+* `pi_hole_webserver_api_app_pwhash` - (default: "") - Pi-hole application password. After you turn on two-factor (2FA) verification and set up an Authenticator app, you may run into issues if you use apps or other services that don't support two-step verification. In this case, you can create and use an app password to sign in. An app password is a long, randomly generated password that can be used instead of your regular password + TOTP token when signing in to the API. The app password can be generated through the API and will be shown only once. You can revoke the app password at any time. If you revoke the app password, be sure to generate a new one and update your app with the new password. Possible values are \<valid Pi-hole password hash\>
+* `pi_hole_webserver_api_app_sudo` - (default: false) - Should application password API sessions be allowed to modify config settings? Setting this to true allows third-party applications using the application password to modify settings, e.g., the upstream DNS servers, DHCP server settings, or changing passwords. This setting should only be enabled if really needed and only if you trust the applications using the application password.
+* `pi_hole_webserver_api_cli_pw` - (default: true) - Should FTL create a temporary CLI password? This password is stored in clear in /etc/pihole and can be used by the CLI (pihole ...  commands) to authenticate against the API. Note that the password is only valid for the current session and regenerated on each FTL restart. Sessions initiated with this password cannot modify the Pi-hole configuration (change passwords, etc.) for security reasons but can still use the API to query data and manage lists.
+* `pi_hole_webserver_api_excludeclients` - (default: []) - Array of clients to be excluded from certain API responses (regex):
+  * Query Log (/api/queries)
+  * Top Clients (/api/stats/top_clients)
+
+  This setting accepts both IP addresses (IPv4 and IPv6) as well as hostnames. Note that backslashes "\" need to be escaped, i.e. "\\" in this setting. Possible values are array of regular expressions describing clients. Example:
+
+  ```yaml
+  pi_hole_webserver_api_excludeclients:
+    - "^192\\.168\\.2\\.56$"
+    - "^fe80::341:[0-9a-f]*$"
+    - "^localhost$"
+  ```
+
+* `pi_hole_webserver_api_excludedomains` - (default: []) - Array of domains to be excluded from certain API responses (regex):
+  * Query Log (/api/queries)
+  * Top Clients (/api/stats/top_domains)
+
+  Note that backslashes "\" need to be escaped, i.e. "\\" in this . Possible values are array of regular expressions describing domains. Example:
+
+  ```yaml
+  pi_hole_webserver_api_excludedomains:
+    - "(^|\\.)\\.google\\.de$"
+    - "\\.pi-hole\\.net$"
+  ```
+
+* `pi_hole_webserver_api_maxhistory` - (default: 86400) - How much history should be imported from the database and returned by the API [seconds]? (max 24*60*60 = 86400).
+* `pi_hole_webserver_api_maxclients` - (default: 10) - Up to how many clients should be returned in the activity graph endpoint (/api/history/clients)? This setting can be overwritten at run-time using the parameter N. Setting this to 0 will always send all clients. Be aware that this may be challenging for the GUI if you have many (think > 1.000 clients) in your network.
+* `pi_hole_webserver_api_client_history_global_max` - (default: true) - How should the API compute the most active clients? If set to true, the API will return the clients with the most queries globally (within 24 hours). If set to false, the API will return the clients with the most queries per time slot individually.
+* `pi_hole_webserver_api_allow_destructive` - (default: true) - Allow destructive API calls (e.g. deleting all queries, powering off the system, ...)
+* `pi_hole_webserver_api_temp_limit` - (default: 60.000000) - Which upper temperature limit should be used by Pi-hole? Temperatures above this limit will be shown as "hot". The number specified here is in the unit defined below.
+* `pi_hole_webserver_api_temp_unit` - (default: "C") - Which temperature unit should be used for temperatures processed by FTL? Possible values are:
+  * "C" Celsius
+  * "F" Fahrenheit
+  * "K" Kelvin
