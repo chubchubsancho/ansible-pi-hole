@@ -20,13 +20,12 @@
     - installation
     - prepare
 
-- name: Copy pihole setupVars
+- name: Copy pihole.toml
   become: true
   ansible.builtin.template:
-    src: etc/pihole/setupVars.conf.j2
-    dest: /etc/pihole/setupVars.conf
-    mode: 0644
-  when: pihole_installed.stat.isdir is undefined
+    src: etc/pihole/pihole.toml.j2
+    dest: /etc/pihole/pihole.toml
+    mode: 0640
   tags:
     - pihole
     - installation
