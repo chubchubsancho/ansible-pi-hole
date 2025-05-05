@@ -11,9 +11,3 @@
   tags:
     - pihole
     - installation
-
-- name: Configure pi-hole
-  ansible.builtin.include_tasks: "configure.yml"
-  tags:
-    - pihole
-    - configure
