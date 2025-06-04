@@ -1,12 +1,12 @@
 [dns]
-  {% if pi_hole_dns_upstreams is defined %}
+{% if pi_hole_dns_upstreams is defined %}
   upstreams = [
-    {% for upstream in pi_hole_dns_upstreams %}
+  {% for upstream in pi_hole_dns_upstreams %}
     "{{ upstream }}",
-    {% endfor %}
-  {% else %}
+  {% endfor %}
+{% else %}
   upstreams = []
-  {% endif %}
+{% endif %}
 
   CNAMEdeepInspect = {{ pi_hole_dns_cname_deep_inspect | default(true) | lower }}
 
@@ -26,15 +26,15 @@
 
   blockTTL = {{ pi_hole_dns_block_ttl | default(2) }}
 
-  {% if pi_hole_dns_hosts is defined %}
+{% if pi_hole_dns_hosts is defined %}
   hosts = [
     {% for host in pi_hole_dns_hosts %}
     "{{ host }}",
     {% endfor %}
   ]
-  {% else %}
+{% else %}
   hosts = []
-  {% endif %}
+{% endif %}
 
   domainNeeded = {{ pi_hole_dns_domain_needed | default(false) | lower }}
 
@@ -54,27 +54,27 @@
 
   queryLogging = {{ pi_hole_dns_query_logging | default(true) | lower }}
 
-  {% if pi_hole_dns_cname_records is defined %}
+{% if pi_hole_dns_cname_records is defined %}
   cnameRecords = [
   {% for cname_record in pi_hole_dns_cname_records %}
     {{ cname_record }},
   {% endfor %}
   ]
-  {% else %}
+{% else %}
   cnameRecords = []
-  {% endif %}
+{% endif %}
 
   port = {{ pi_hole_dns_port | default(53) }}
 
-  {% if pi_hole_dns_rev_servers is defined %}
+{% if pi_hole_dns_rev_servers is defined %}
   revServers = [
     {% for rev_server in pi_hole_dns_rev_servers %}
     "{{ rev_server }}",
     {% endfor %}
   ]
-  {% else %}
+{% else %}
   revServers = []
-  {% endif %}
+{% endif %}
 
   [dns.cache]
     size = {{ pi_hole_dns_cache_size | default(10000) }}
@@ -143,15 +143,15 @@
 
   ignoreUnknownClients = {{ pi_hole_dhcp_ignoreunknownclients | default(false) }}
 
-  {% if pi_hole_dhcp_hosts is defined %}
+{% if pi_hole_dhcp_hosts is defined %}
   hosts = [
   {% for host in pi_hole_dhcp_hosts %}
     "{{ host }}",
   {% endfor %}
   ]
-  {% else %}
+{% else %}
   hosts = []
-  {% endif %}
+{% endif %}
 
   [ntp.ipv4]
     active = {{ pi_hole_dhcp_ntp_ipv4_active | default(true) }}
@@ -211,13 +211,13 @@
 
   threads = {{ pi_hole_webserver_threads | default(50) }}
 
-  {% if pi_hole_webserver_headers is defined %}
+{% if pi_hole_webserver_headers is defined %}
   headers = [
     {% for header in pi_hole_webserver_headers %}
     "{{ header }}",
     {% endfor %}
   ]
-  {% else %}
+{% else %}
   headers = [
     "X-DNS-Prefetch-Control: off",
     "Content-Security-Policy: default-src 'self' 'unsafe-inline';",
@@ -226,7 +226,7 @@
     "X-Content-Type-Options: nosniff",
     "Referrer-Policy: strict-origin-when-cross-origin"
   ]
-  {% endif %}
+{% endif %}
 
   serve_all = {{ pi_hole_webserver_serve_all | default(false) }}
 
@@ -265,25 +265,25 @@
 
     cli_pw = {{ pi_hole_webserver_api_cli_pw | default(true) }}
 
-    {% if pi_hole_webserver_api_excludeclients is defined %}
+  {% if pi_hole_webserver_api_excludeclients is defined %}
     excludeClients = [
       {% for client in pi_hole_webserver_api_excludeclients %}
       "{{ client }}",
       {% endfor %}
     ]
-    {% else %}
+  {% else %}
     excludeClients = []
-    {% endif %}
+  {% endif %}
 
-    {% if pi_hole_webserver_api_excludedomains is defined %}}
+  {% if pi_hole_webserver_api_excludedomains is defined %}}
     excludeDomains = [
       {% for domain in pi_hole_webserver_api_excludedomains %}
       "{{ domain }}",
       {% endfor %}
     ]
-    {% else %}
+  {% else %}
     excludeDomains = []
-    {% endif %}
+  {% endif %}
 
     maxHistory = {{ pi_hole_webserver_api_max_history | default(86400) }}
 
@@ -330,15 +330,15 @@
 
   etc_dnsmasq_d = {{ pi_hole_misc_etc_dnsmasq_d | default(false) }}
 
-  {% if pi_hole_misc_dnsmasq_lines is defined %}
+{% if pi_hole_misc_dnsmasq_lines is defined %}
   dnsmasq_lines = [
     {% for line in pi_hole_misc_dnsmasq_lines %}
     "{{ line }}",
     {% endfor %}
   ]
-  {% else %}
+{% else %}
   dnsmasq_lines = []
-  {% endif %}
+{% endif %}
 
   extraLogging = {{ pi_hole_misc_extralogging | default(false) }}
 
