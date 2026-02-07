@@ -1,0 +1,12 @@
+# Ansible temporary files
+.ansible/
+
+# Molecule temporary files
+molecule/default/.molecule/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Test artifacts
+*.log

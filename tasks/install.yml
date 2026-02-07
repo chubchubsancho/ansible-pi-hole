@@ -20,16 +20,93 @@
     - installation
     - prepare
 
+- name: Check if pihole.toml exists
+  become: true
+  ansible.builtin.stat:
+    path: /etc/pihole/pihole.toml
+  register: pihole_toml_exists
+  tags:
+    - pihole
+    - installation
+    - prepare
+    - configuration
+
+- name: Generate pihole.toml to temporary location for comparison
+  become: true
+  ansible.builtin.template:
+    src: etc/pihole/pihole.toml.j2
+    dest: /tmp/pihole.toml.new
+    mode: 0640
+  when: pihole_toml_exists.stat.exists | default(false)
+  changed_when: false
+  tags:
+    - pihole
+    - installation
+    - prepare
+    - configuration
+
+- name: Extract configuration values from existing pihole.toml (ignore comments and stats)
+  become: true
+  ansible.builtin.shell: |
+    set -o pipefail
+    grep -v '^\s*#' /etc/pihole/pihole.toml | sed 's/\s*###.*$//' | grep -v '^$' | grep -v '^\s*$'
+  args:
+    executable: /bin/bash
+  register: existing_config
+  when: pihole_toml_exists.stat.exists | default(false)
+  changed_when: false
+  failed_when: false
+  tags:
+    - pihole
+    - installation
+    - prepare
+    - configuration
+
+- name: Extract configuration values from new template (ignore comments)
+  become: true
+  ansible.builtin.shell: |
+    set -o pipefail
+    grep -v '^\s*#' /tmp/pihole.toml.new | sed 's/\s*###.*$//' | grep -v '^$' | grep -v '^\s*$'
+  args:
+    executable: /bin/bash
+  register: new_config
+  when: pihole_toml_exists.stat.exists | default(false)
+  changed_when: false
+  failed_when: false
+  tags:
+    - pihole
+    - installation
+    - prepare
+    - configuration
+
 - name: Copy pihole.toml
   become: true
   ansible.builtin.template:
     src: etc/pihole/pihole.toml.j2
     dest: /etc/pihole/pihole.toml
     mode: 0640
+    backup: true
+  when: >
+    not (pihole_toml_exists.stat.exists | default(false)) or
+    (existing_config.stdout | default('') != new_config.stdout | default(''))
   tags:
     - pihole
     - installation
     - prepare
+    - configuration
+
+- name: Clean up temporary template file
+  become: true
+  ansible.builtin.file:
+    path: /tmp/pihole.toml.new
+    state: absent
+  when: pihole_toml_exists.stat.exists | default(false)
+  changed_when: false
+  tags:
+    - pihole
+    - installation
+    - prepare
+    - configuration
 
 - name: Clone pihole repository revision {{ pi_hole_version }}
   become: true
