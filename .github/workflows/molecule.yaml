@@ -19,13 +19,15 @@ jobs:
       matrix:
         include:
           - image: ubuntu
-            version: "20.04"
-          - image: ubuntu
             version: "22.04"
           - image: ubuntu
             version: "24.04"
           - image: debian
             version: "11"
+          - image: debian
+            version: "12"
+          - image: debian
+            version: "13"
     steps:
       - uses: actions/checkout@v2
       - name: Setup Environment
