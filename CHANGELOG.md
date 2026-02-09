@@ -1,5 +1,35 @@
 # Changelog
 
+## [2.0.0](https://github.com/chubchubsancho/ansible-pi-hole/compare/v1.2.6...v2.0.0) (2026-02-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* **pi-hole:** upgrade to pi_hole v6.3
+* **install:** review install and configure process
+
+### Features
+
+* **config/database:** add configuration for database ([a13206e](https://github.com/chubchubsancho/ansible-pi-hole/commit/a13206e7a980c274ec40355330b5f8d51d01c0fd))
+* **config/debug:** add configuration for debug ([a62cc3a](https://github.com/chubchubsancho/ansible-pi-hole/commit/a62cc3a22a6607c9d84a5e910ce2d7b304c5bf70))
+* **config/dhcp:** add configuration for dhcp ([b2681e7](https://github.com/chubchubsancho/ansible-pi-hole/commit/b2681e7fe1535e54a3d7f42f3a77555a5a8fd598))
+* **config/dns:** add configuration for dns ([b7ccda3](https://github.com/chubchubsancho/ansible-pi-hole/commit/b7ccda3cb56af5a225f5819ba5a6dcb3e955ce1c))
+* **config/files:** add configuration for files ([33545ef](https://github.com/chubchubsancho/ansible-pi-hole/commit/33545ef1fcb4371b8813dc20f0a1582c365ab614))
+* **config/misc:** add configuration for misc ([399e621](https://github.com/chubchubsancho/ansible-pi-hole/commit/399e621218b682764b8224111069c45e3b5d286b))
+* **config/resolver:** add configuration for resolver ([9633e7e](https://github.com/chubchubsancho/ansible-pi-hole/commit/9633e7e62d5c1169e59c5b77ff6a3e5da2e23cca))
+* **config/webserver:** add configuration for webserver ([cde6ef0](https://github.com/chubchubsancho/ansible-pi-hole/commit/cde6ef014f75784a18e4f99f59518b6b8ab7c951))
+* **install:** review install and configure process ([46f349f](https://github.com/chubchubsancho/ansible-pi-hole/commit/46f349f5ab76d0f507cf3e8c649f50d0c788e743))
+* **pi-hole:** upgrade to pi_hole v6.3 ([5484fe2](https://github.com/chubchubsancho/ansible-pi-hole/commit/5484fe295cbe7fe777bdfc4f9a1c26f06034e62b))
+
+
+### Bug Fixes
+
+* **confg:** fix bad indent in render on conditional value ([c92f8f6](https://github.com/chubchubsancho/ansible-pi-hole/commit/c92f8f643de4aa683434534a97f2cbc002a125d7))
+* **config:** add config comment for idempotence ([bb91c6b](https://github.com/chubchubsancho/ansible-pi-hole/commit/bb91c6baba70f52fd4dadee8238678d541bc7f7f))
+* **config:** update config file for idempotency ([d6c3cc0](https://github.com/chubchubsancho/ansible-pi-hole/commit/d6c3cc0d326e3272ed73cf9e12ecff333b07c46a))
+* **configure:** fix pihole-FTL.config permission ([bee2861](https://github.com/chubchubsancho/ansible-pi-hole/commit/bee286151f768fa468aeda948e9481a724d5127e))
+* **install:** implement intelligent config comparison for pihole.toml idempotence ([5aaec1a](https://github.com/chubchubsancho/ansible-pi-hole/commit/5aaec1a2bff1c69ce5df7ccff4e8a3c28c860e16))
+
 ## [1.2.6](https://github.com/chubchubsancho/ansible-pi-hole/compare/v1.2.5...v1.2.6) (2023-04-12)
 
 
