@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the codebase.
-        uses: actions/checkout@v3.6.0
+        uses: actions/checkout@v6.0.2
 
       - name: Set up Python 3.
         uses: actions/setup-python@v4.9.1
