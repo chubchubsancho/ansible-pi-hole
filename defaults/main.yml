@@ -1,3 +1,4 @@
 ---
 # Revision of Pi-hole repository
+# renovate: datasource=github-releases packageName=pi-hole/pi-hole
 pi_hole_version: "v6.3"

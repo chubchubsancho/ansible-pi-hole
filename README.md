@@ -14,7 +14,8 @@ An ansible role to install [Pi-Hole](https://pi-hole.net/)
 
 Add `pi-hole` variable for config. These vars can be omited
 
-* `pi_hole_version` - (default: "HEAD") - define branch/tag/commit of `pi-hole` repository which will be cloned
+<!-- renovate: datasource=github-releases packageName=pi-hole/pi-hole -->
+* `pi_hole_version` - (default: "v6.3") - define branch/tag/commit of `pi-hole` repository which will be cloned
 * `pi_hole_download_dir` - (default: "/home/pihole") - define base directory for clone `pi-hole`
 * `pi_hole_install_dir` - (default: "pi-hole") - define directory where to clone `pi-hole`
 

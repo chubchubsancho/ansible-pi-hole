@@ -2,5 +2,52 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
+  ],
+  "semanticCommits": "enabled",
+  "packageRules": [
+    {
+      "matchDatasources": ["github-releases"],
+      "matchPackageNames": ["pi-hole/pi-hole"],
+      "matchUpdateTypes": ["patch"],
+      "semanticCommitType": "fix",
+      "semanticCommitScope": "pi-hole"
+    },
+    {
+      "matchDatasources": ["github-releases"],
+      "matchPackageNames": ["pi-hole/pi-hole"],
+      "matchUpdateTypes": ["minor"],
+      "semanticCommitType": "feat",
+      "semanticCommitScope": "pi-hole"
+    },
+    {
+      "matchDatasources": ["github-releases"],
+      "matchPackageNames": ["pi-hole/pi-hole"],
+      "matchUpdateTypes": ["major"],
+      "semanticCommitType": "feat",
+      "semanticCommitScope": "pi-hole",
+      "commitBody": "BREAKING CHANGE: Pi-hole major version update"
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update Pi-hole version in Ansible role",
+      "managerFilePatterns": [
+        "^defaults/main.yml$"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>.*?) packageName=(?<packageName>.*)\\s.*?_version:\\s*['\"]?(?<currentValue>[\\w+\\.\\-]*)['\"]?"
+      ]
+    },
+    {
+      "customType": "regex",
+      "description": "Update Pi-hole version in README",
+      "managerFilePatterns": [
+        "^README\\.md$"
+      ],
+      "matchStrings": [
+        "<!-- renovate: datasource=(?<datasource>\\S+) packageName=(?<packageName>\\S+) -->\\s*\\*.*?\\(default: \\\"(?<currentValue>[^\\\"]+)\\\"\\)"
+      ]
+    }
   ]
 }
