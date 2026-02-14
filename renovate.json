@@ -6,23 +6,41 @@
   "semanticCommits": "enabled",
   "packageRules": [
     {
-      "matchDatasources": ["github-releases"],
-      "matchPackageNames": ["pi-hole/pi-hole"],
-      "matchUpdateTypes": ["patch"],
+      "matchDatasources": [
+        "github-releases"
+      ],
+      "matchPackageNames": [
+        "pi-hole/pi-hole"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ],
       "semanticCommitType": "fix",
       "semanticCommitScope": "pi-hole"
     },
     {
-      "matchDatasources": ["github-releases"],
-      "matchPackageNames": ["pi-hole/pi-hole"],
-      "matchUpdateTypes": ["minor"],
+      "matchDatasources": [
+        "github-releases"
+      ],
+      "matchPackageNames": [
+        "pi-hole/pi-hole"
+      ],
+      "matchUpdateTypes": [
+        "minor"
+      ],
       "semanticCommitType": "feat",
       "semanticCommitScope": "pi-hole"
     },
     {
-      "matchDatasources": ["github-releases"],
-      "matchPackageNames": ["pi-hole/pi-hole"],
-      "matchUpdateTypes": ["major"],
+      "matchDatasources": [
+        "github-releases"
+      ],
+      "matchPackageNames": [
+        "pi-hole/pi-hole"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "semanticCommitType": "feat",
       "semanticCommitScope": "pi-hole",
       "commitBody": "BREAKING CHANGE: Pi-hole major version update"
@@ -33,20 +51,20 @@
       "customType": "regex",
       "description": "Update Pi-hole version in Ansible role",
       "managerFilePatterns": [
-        "^defaults/main.yml$"
+        "defaults/main.yml"
       ],
       "matchStrings": [
-        "# renovate: datasource=(?<datasource>.*?) packageName=(?<packageName>.*)\\s.*?_version:\\s*['\"]?(?<currentValue>[\\w+\\.\\-]*)['\"]?"
+        "# renovate: datasource=(?<datasource>\\S+) packageName=(?<packageName>\\S+)\\s+\\w+_version:\\s*['\"]?(?<currentValue>[^'\"\\s]+)['\"]?"
       ]
     },
     {
       "customType": "regex",
       "description": "Update Pi-hole version in README",
       "managerFilePatterns": [
-        "^README\\.md$"
+        "README.md"
       ],
       "matchStrings": [
-        "<!-- renovate: datasource=(?<datasource>\\S+) packageName=(?<packageName>\\S+) -->\\s*\\*.*?\\(default: \\\"(?<currentValue>[^\\\"]+)\\\"\\)"
+        "<!-- renovate: datasource=(?<datasource>\\S+) packageName=(?<packageName>\\S+) -->\\s*\\*.*?\\(default: \"(?<currentValue>[^\"]+)\"\\)"
       ]
     }
   ]
