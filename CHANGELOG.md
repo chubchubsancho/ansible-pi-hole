@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/chubchubsancho/ansible-pi-hole/compare/v2.0.0...v2.1.0) (2026-02-18)
+
+
+### Features
+
+* **pi-hole:** update dependency pi-hole/pi-hole to v6.4 ([c5a94d5](https://github.com/chubchubsancho/ansible-pi-hole/commit/c5a94d51df6b5ad47e5b54fb5d397d06b853b3f3))
+
 ## [2.0.0](https://github.com/chubchubsancho/ansible-pi-hole/compare/v1.2.6...v2.0.0) (2026-02-09)
 
 
