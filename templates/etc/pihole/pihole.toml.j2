@@ -318,7 +318,7 @@
     #
     # Allowed values are:
     #     Any valid domain
-    name = {{ pi_hole_dns_domain_name | default('"lan"') }}
+    name = "{{ pi_hole_dns_domain_name | default('lan') }}"
 
     # If set, the domain configured by dns.domain.name is considered local and queries for
     # this domain are never forwarded upstream unless a dns.revServer is configured for
@@ -580,7 +580,7 @@
   #
   # Allowed values are:
   #     A valid IPv4 address, or empty string ("")
-  start = {{ pi_hole_dhcp_start | default('""') }}
+  start = "{{ pi_hole_dhcp_start | default('') }}"
 
   # End address of the DHCP address pool
   #
@@ -588,7 +588,7 @@
   #
   # Allowed values are:
   #     A valid IPv4 address, or empty string ("")
-  end = {{ pi_hole_dhcp_end | default('""') }}
+  end = "{{ pi_hole_dhcp_end | default('') }}"
 
   # Address of the gateway to be used (typically the address of your router in a home
   # installation)
@@ -597,7 +597,7 @@
   #
   # Allowed values are:
   #     A valid IPv4 address, or empty string ("")
-  router = {{ pi_hole_dhcp_router | default('""') }}
+  router = "{{ pi_hole_dhcp_router | default('') }}"
 
   # The netmask used by your Pi-hole. For directly connected networks (i.e., networks on
   # which the machine running Pi-hole has an interface) the netmask is optional and may
@@ -612,7 +612,7 @@
   #
   # Allowed values are:
   #     Any valid netmask, or an empty string ("") for auto-discovery
-  netmask = {{ pi_hole_dhcp_netmask | default('""') }}
+  netmask = "{{ pi_hole_dhcp_netmask | default('') }}"
 
   # If the lease time is given, then leases will be given for that length of time. If not
   # given, the default lease time is one hour for IPv4 and one day for IPv6.
@@ -882,7 +882,7 @@
   #
   # Allowed values are:
   #     A valid domain
-  domain = {{ pi_hole_webserver_domain | default('"pi.hole"') }}
+  domain = "{{ pi_hole_webserver_domain | default('pi.hole') }}"
 
   # Webserver access control list (ACL) allowing for restrictions to be put on the list
   # of IP addresses which have access to the web server. The ACL is a comma separated
@@ -1082,7 +1082,7 @@
     #
     # Allowed values are:
     #     A valid TLS certificate file (*.pem)
-    cert = {{ pi_hole_webserver_tls_cert | default('"/etc/pihole/tls.pem"') }}
+    cert = "{{ pi_hole_webserver_tls_cert | default('/etc/pihole/tls.pem') }}"
 
     # Number of days the automatically generated self-signed TLS/SSL certificate will be
     # valid for.
