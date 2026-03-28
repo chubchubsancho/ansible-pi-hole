@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.1.1](https://github.com/chubchubsancho/ansible-pi-hole/compare/v2.1.0...v2.1.1) (2026-03-28)
+
+
+### Bug Fixes
+
+* **config:** quote some configuration values ([2db2efb](https://github.com/chubchubsancho/ansible-pi-hole/commit/2db2efb5f28499d132d47fed0e173c7f90dd943b))
+* **template:** correct Jinja tag for api excludedomains block ([8030839](https://github.com/chubchubsancho/ansible-pi-hole/commit/8030839f6e45a0eb54da8fb0cfeb19d3a90cf2a5))
+
 ## [2.1.0](https://github.com/chubchubsancho/ansible-pi-hole/compare/v2.0.0...v2.1.0) (2026-02-18)
 
 
