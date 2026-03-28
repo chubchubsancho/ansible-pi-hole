@@ -1256,7 +1256,7 @@
     #
     # Allowed values are:
     #     An array of regular expressions describing domains
-{% if pi_hole_webserver_api_excludedomains is defined %}}
+{% if pi_hole_webserver_api_excludedomains is defined %}
     excludeDomains = [
       {% for domain in pi_hole_webserver_api_excludedomains %}
       "{{ domain }}",
