@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.1.2](https://github.com/chubchubsancho/ansible-pi-hole/compare/v2.1.1...v2.1.2) (2026-04-04)
+
+
+### Bug Fixes
+
+* **pi-hole:** update dependency pi-hole/pi-hole to v6.4.1 ([528759c](https://github.com/chubchubsancho/ansible-pi-hole/commit/528759cd9f5055afd6155b1e84d22d702086bf27))
+* **template:** add missing macNames setting to pihole.toml.j2 ([b49524b](https://github.com/chubchubsancho/ansible-pi-hole/commit/b49524b1ae5e08c08e915602e6a54a91a067d446))
+
 ## [2.1.1](https://github.com/chubchubsancho/ansible-pi-hole/compare/v2.1.0...v2.1.1) (2026-03-28)
 
 
