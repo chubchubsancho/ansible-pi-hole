@@ -15,7 +15,7 @@ jobs:
           application_id: "309440"
           application_private_key: ${{ secrets.RELEASE_PLEASE_PRIVATE_KEY }}
 
-      - uses: googleapis/release-please-action@v4
+      - uses: googleapis/release-please-action@v5
         with:
           command: manifest
           release-type: simple
