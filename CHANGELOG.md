@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.2.1](https://github.com/chubchubsancho/ansible-pi-hole/compare/v2.2.0...v2.2.1) (2026-08-10)
+
+
+### Bug Fixes
+
+* **config:** template pihole.toml with the mode it actually keeps ([603ca15](https://github.com/chubchubsancho/ansible-pi-hole/commit/603ca15dca86a5068e160e3d8ea81efa3be3cc05))
+* **template:** render arrays the way pihole-FTL writes them ([92d1684](https://github.com/chubchubsancho/ansible-pi-hole/commit/92d1684759a5d5aca03adcf60a2a9af06f5eb1db))
+
 ## [2.2.0](https://github.com/chubchubsancho/ansible-pi-hole/compare/v2.1.3...v2.2.0) (2026-08-10)
 
 
