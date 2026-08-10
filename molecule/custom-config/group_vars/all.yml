@@ -1,0 +1,66 @@
+---
+ansible_user: ansible
+
+# Every list variable the template understands, so each {% if ... is defined %} branch
+# is rendered and handed to pihole-FTL. Values use the formats documented in the
+# template's own comment blocks; FTL validates these on startup and falls back to the
+# default (rewriting pihole.toml, which then shows up as an idempotence failure) if it
+# rejects one.
+#
+# Deliberately absent: dns.queryLogging, misc.privacylevel and dns.interface. On a fresh
+# install basic-install.sh writes those three itself via setFTLConfigValue, after the
+# role has templated pihole.toml, so setting them here would be overwritten and the
+# second converge would report changed. dns.upstreams is written by the same block but
+# only when PIHOLE_DNS_1 is non-empty, which it is not under --unattended -- if that
+# ever changes, this scenario fails at idempotence rather than silently losing the value.
+
+pi_hole_dns_upstreams:
+  - "1.1.1.1"
+  - "1.0.0.1"
+
+# Two entries so the comma-between-elements rendering is exercised, not just a
+# single-element list where the trailing comma question never comes up.
+pi_hole_dns_hosts:
+  - "10.99.99.99 verify.molecule.test"
+  - "10.99.99.98 second.molecule.test"
+
+pi_hole_dns_cname_records:
+  - "alias.molecule.test,verify.molecule.test"
+
+pi_hole_dns_rev_servers:
+  - "true,10.99.0.0/16,10.99.0.1#53,molecule.test"
+
+pi_hole_dhcp_hosts:
+  - "00:20:e0:3b:13:af,10.99.0.123,molecule-laptop,24h"
+
+# Upstream's six defaults plus one of our own, so the rendered list differs from the
+# {% else %} literal rather than accidentally reproducing it.
+pi_hole_webserver_headers:
+  - "X-DNS-Prefetch-Control: off"
+  - "Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;"
+  - "X-Frame-Options: DENY"
+  - "X-XSS-Protection: 0"
+  - "X-Content-Type-Options: nosniff"
+  - "Referrer-Policy: strict-origin-when-cross-origin"
+  - "X-Molecule-Test: custom-config"
+
+# A CivetWeb option set to its own default value: exercises the array branch without
+# changing how the web server behaves, since verification still expects port 80 up.
+pi_hole_webserver_advanced_opts:
+  - "max_request_size=16384"
+
+# Single-quoted so YAML leaves the backslashes alone: the value has to reach TOML as
+# "\\." for the parser to hand FTL a literal "\." in the regex.
+pi_hole_webserver_api_excludeclients:
+  - '^10\\.99\\.0\\.1$'
+pi_hole_webserver_api_excludedomains:
+  - '\\.molecule\\.test$'
+
+pi_hole_misc_dnsmasq_lines:
+  - "address=/dnsmasq.molecule.test/10.99.0.77"
+
+# A few non-default scalars for breadth across the template's other sections.
+pi_hole_dns_dnssec: true
+pi_hole_dns_expand_hosts: true
+pi_hole_dns_cache_size: 5000
+pi_hole_misc_nice: -5
