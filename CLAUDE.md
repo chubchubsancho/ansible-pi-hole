@@ -146,12 +146,22 @@ Notes:
   It imports the role by its **Galaxy name** `chubchubsancho.pi_hole` (not the directory
   name).
 - Both scenarios use the `ansible` verifier. `molecule/default/verify.yml` checks that
-  pihole-FTL is enabled and running, that the installed files exist, that `pihole -v`
-  reports `pi_hole_version`, that ports 53 and 80 are up, and that a `pi_hole_dns_hosts`
-  record set in the inventory comes back out of FTL via `dig`.
+  pihole-FTL is enabled and running, that the installed files exist with `pihole.toml` at
+  0644, that `git describe --tags` in `pi_hole_install_dir` reports `pi_hole_version`,
+  that ports 53 and 80 are up, and that a `pi_hole_dns_hosts` record set in the inventory
+  comes back out of FTL via `dig`. Don't reach for `pihole -v` here: it exits 2 with no
+  output at all on AlmaLinux 9 and 10, and it reports Pi-hole's own core/web/FTL versions
+  rather than the revision the role pins.
   `molecule/custom-config/verify.yml` resolves the records its configuration should have
   created, reads the scalars back with `pihole-FTL --config`, and confirms every list
   element survived into the live `pihole.toml`.
+- `molecule/custom-config/side_effect.yml` covers the repair half of the config drift
+  detection. `idempotence` only reaches the "nothing changed" branch, so the side effect
+  changes `blockTTL` in the live `pihole.toml`, re-imports the converge playbook over it,
+  and asserts the role wrote the templated value back. It stops pihole-FTL first: FTL
+  watches `/etc/pihole` with inotify and reloads on any write, which would otherwise race
+  the check and make the outcome timing dependent. It restarts FTL at the end because
+  `verify.yml` expects it up.
 - `custom-config` shares the default scenario's `Dockerfile.j2` through the platform's
   `dockerfile:` key rather than keeping a second copy.
 - The template's arrays must render exactly the way pihole-FTL writes them — elements two
