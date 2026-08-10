@@ -244,7 +244,6 @@ pi_hole_webserver_acl: "+127.0.0.1,+[::1],-192.168.0.0/16"
 
 ## Define pi-hole files configuration
 
-* `pi_hole_files_pid` - (default: "/run/pihole-FTL.pid") - The file which contains the PID of FTL's main process. Possible values are \<any writable file\>
 * `pi_hole_files_database` - (default: "/etc/pihole/pihole-FTL.db") - The location of FTL's long-term database. Possible values are \<any FTL database\>
 * `pi_hole_files_tmp_db` — (default: `"/etc/pihole/pihole-tmp.db"`) — Short-term SQLite path used when `pi_hole_database_forcedisk` is enabled.
 * `pi_hole_files_gravity` - (default:"/etc/pihole/gravity.db") -The location of Pi-hole's gravity database. Possible values are \<any Pi-hole gravity database\>
@@ -308,4 +307,5 @@ pi_hole_webserver_acl: "+127.0.0.1,+[::1],-192.168.0.0/16"
 * `pi_hole_debug_ntp` - (default: false) - Print information about NTP synchronization.
 * `pi_hole_debug_netlink` - (default: false) - Print information about netlink communication and parsing.
 * `pi_hole_debug_timing` — (default: `false`) — Debug timing-related internals (`debug.timing` in TOML).
+* `pi_hole_debug_performance` - (default: false) - Log gravity lookup and FTL DNS cache performance statistics every 5 minutes. For each operation type (gravity, antigravity, denylist, allowlist), reports the call count, average and maximum latency, and percentage of slow queries (>1 ms). Also reports the FTL cache hit/miss ratio, indicating how often gravity.db is queried at all.
 * `pi_hole_debug_all` - (default: false) - Set all debug flags at once. This is a convenience option to enable all debug flags at once. Note that this option is not persistent, setting it to true will enable all *remaining* debug flags but unsetting it will disable *all* debug flags.
