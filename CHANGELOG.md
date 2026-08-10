@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.1.3](https://github.com/chubchubsancho/ansible-pi-hole/compare/v2.1.2...v2.1.3) (2026-08-10)
+
+
+### Bug Fixes
+
+* **pi-hole:** update dependency pi-hole/pi-hole to v6.4.3 ([8180dd0](https://github.com/chubchubsancho/ansible-pi-hole/commit/8180dd04c5003ee47d1ba5c7538019f8e87df206))
+* **template:** sync pihole.toml with pihole-FTL v6.7 schema ([dce3715](https://github.com/chubchubsancho/ansible-pi-hole/commit/dce3715dedf364f8555e9eddad017dafb7ab80f6))
+
 ## [2.1.2](https://github.com/chubchubsancho/ansible-pi-hole/compare/v2.1.1...v2.1.2) (2026-04-04)
 
 
