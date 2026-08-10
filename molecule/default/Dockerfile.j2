@@ -15,6 +15,7 @@ ENV {{ var }} {{ value }}
 {% endif %}
 
 RUN if [ $(command -v apt-get) ]; then apt-get update && DEBIAN_FRONTEND=noninteractive LANG=C.UTF-8 apt-get install -y python3 sudo bash ca-certificates iproute2 python3-apt aptitude systemd systemd-sysv && apt-get clean; \
+    elif [ $(command -v dnf5) ]; then dnf5 makecache && dnf5 --assumeyes install python3 python3-libdnf5 sudo bash iproute systemd systemd-sysv && dnf5 clean all; \
     elif [ $(command -v dnf) ]; then dnf makecache && dnf --assumeyes install /usr/bin/python3 /usr/bin/python3-config /usr/bin/dnf-3 sudo bash iproute systemd systemd-sysv && dnf clean all; \
     elif [ $(command -v yum) ]; then yum makecache fast && yum install -y /usr/bin/python /usr/bin/python2-config sudo yum-plugin-ovl bash iproute systemd systemd-sysv && sed -i 's/plugins=0/plugins=1/g' /etc/yum.conf && yum clean all; \
     fi
@@ -26,3 +27,34 @@ RUN set -xe \
     && useradd -m -g ${ANSIBLE_USER} ${ANSIBLE_USER} \
     && usermod -aG ${DEPLOY_GROUP} ${ANSIBLE_USER} \
     && echo "%${DEPLOY_GROUP}  ALL=(ALL)	NOPASSWD: ALL" >> /etc/sudoers
+
+# Two RedHat-family container fixes, both absent from the Debian images because their
+# defaults already work.
+#
+# nsswitch: EL and Fedora resolve hosts through "files myhostname resolve
+# [!UNAVAIL=return] dns". nss-resolve is consulted before plain dns, and the
+# [!UNAVAIL=return] action means a systemd-resolved that is reachable but cannot answer
+# ends the lookup instead of falling through to Docker's resolver at 127.0.0.11. That
+# makes gravity.sh's "getent hosts" gate fail and the installer abort with "No DNS
+# resolution available" after its 120s wait. Resolve from files and plain dns only.
+#
+# sudo: its stock PAM stack does not work in a RedHat-family container: the account phase
+# returns "Authentication service cannot retrieve authentication info", which sudo
+# reports before the NOPASSWD rule is ever consulted. These containers are disposable,
+# single-user and already privileged, so give sudo a permit-only stack rather than
+# trying to make the distro's account modules happy without their daemons.
+#
+# The build then asserts that become actually works, so a broken image fails here with
+# a clear error instead of surfacing as an opaque converge failure. The assertion goes
+# through sudo twice (root -> ansible -> root) rather than runuser, which the Fedora
+# base image does not ship. Both -n flags keep a misconfigured image failing instead of
+# blocking on a password prompt.
+RUN if [ -f /etc/redhat-release ]; then \
+      sed -i 's/^hosts:.*/hosts:      files dns myhostname/' /etc/nsswitch.conf \
+      && { echo '#%PAM-1.0'; \
+        echo 'auth       sufficient   pam_permit.so'; \
+        echo 'account    sufficient   pam_permit.so'; \
+        echo 'session    required     pam_permit.so'; \
+      } > /etc/pam.d/sudo \
+      && sudo -n -u ${ANSIBLE_USER} sudo -n true; \
+    fi
