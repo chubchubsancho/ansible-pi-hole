@@ -40,11 +40,9 @@
         fail_msg: >-
           Missing: {{ pihole_paths.results | rejectattr('stat.exists') | map(attribute='item') | list }}
 
-    - name: Assert pihole.toml is rendered with the mode the role sets
-      ansible.builtin.assert:
-        that:
-          - pihole_paths.results[1].stat.mode == '0640'
-        fail_msg: "/etc/pihole/pihole.toml is {{ pihole_paths.results[1].stat.mode }}, expected 0640"
+    # Deliberately not asserting pihole.toml's mode. The role templates it 0640, but
+    # pihole-FTL rewrites the file on startup and creates it 0644, so the mode on a
+    # converged host belongs to FTL rather than to the role.
 
     - name: Query the installed Pi-hole version
       become: true
