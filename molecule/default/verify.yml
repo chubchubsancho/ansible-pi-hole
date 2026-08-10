@@ -6,6 +6,7 @@
   # the role itself rather than restating pi_hole_version and letting it drift.
   vars_files:
     - "{{ playbook_dir }}/../../defaults/main.yml"
+    - "{{ playbook_dir }}/../../vars/main.yml"
   tasks:
     - name: Gather service facts
       become: true
@@ -44,17 +45,24 @@
     # pihole-FTL rewrites the file on startup and creates it 0644, so the mode on a
     # converged host belongs to FTL rather than to the role.
 
-    - name: Query the installed Pi-hole version
+    # Asking git rather than `pihole -v`. The revision the role controls is the one it
+    # cloned, whereas `pihole -v` reports Pi-hole's own core/web/FTL versions -- and it
+    # exits 2 with no output at all on AlmaLinux 9 and 10, though it works everywhere
+    # else. update_repo() in basic-install.sh only resets the checkout when it is on
+    # master, and the role leaves it detached at the tag, so the tag survives the install.
+    - name: Read the revision the role checked out  # noqa: command-instead-of-module
       become: true
-      ansible.builtin.command: pihole -v
-      register: pihole_version
+      ansible.builtin.command: git -C {{ pi_hole_install_dir }} describe --tags
+      register: pihole_checkout
       changed_when: false
 
-    - name: Assert the requested revision is the one that got installed
+    - name: Assert the requested revision is the one that got checked out
       ansible.builtin.assert:
         that:
-          - pi_hole_version in pihole_version.stdout
-        fail_msg: "Expected {{ pi_hole_version }} in `pihole -v` output: {{ pihole_version.stdout }}"
+          - pi_hole_version in pihole_checkout.stdout
+        fail_msg: >-
+          {{ pi_hole_install_dir }} is at '{{ pihole_checkout.stdout | trim }}',
+          expected it to contain {{ pi_hole_version }}
 
     - name: Assert Pi-hole is listening on its DNS and webserver ports
       ansible.builtin.wait_for:
