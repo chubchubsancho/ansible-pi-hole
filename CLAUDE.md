@@ -139,9 +139,14 @@ Notes:
 Linting:
 
 ```bash
-ansible-lint -q .   # same command molecule's lint stage runs
+ansible-lint -q .
 yamllint .
 ```
+
+Both run as a dedicated `lint` job in `.github/workflows/molecule.yaml` and are
+gating — keep them clean. They are *not* part of the `molecule test` sequence
+(molecule's own `lint:` key in `molecule.yml` is vestigial and never executes), so a
+green molecule run says nothing about lint.
 
 `.yamllint` sets 2-space indentation, 160-char lines (warning), and forbids non-empty
 `{ }` / `[ ]` flow style — use block style in YAML. `.ansible-lint` mocks the `pi_hole`
@@ -149,8 +154,9 @@ role and excludes `.github/`, `.cache/`, `.git/`.
 
 ## CI / release
 
-- `.github/workflows/molecule.yaml` — matrix `molecule test` on PRs and pushes to
-  `master`.
+- `.github/workflows/molecule.yaml` — two jobs on PRs and pushes to `master`: a `lint`
+  job (`yamllint .`, then `ansible-lint -q .`) and the matrix `molecule test`. They run
+  in parallel; both must pass.
 - `.github/workflows/release.yaml` — release-please (manifest mode, `release-type:
   simple`) on `master`; maintains `CHANGELOG.md` and `.release-please-manifest.json`.
 - `.github/workflows/publish.yaml` — on GitHub release, imports the role into Galaxy.

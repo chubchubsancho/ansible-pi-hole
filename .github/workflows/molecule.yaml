@@ -11,6 +11,20 @@ on:
       - master
 
 jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Setup Environment
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install ansible-lint yamllint
+      - name: yamllint
+        run: yamllint .
+      - name: ansible-lint
+        run: ansible-lint -q .
+
   test:
     name: molecule test on ${{ matrix.image }} ${{ matrix.version }}
     runs-on: ubuntu-latest

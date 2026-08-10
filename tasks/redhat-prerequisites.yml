@@ -1,5 +1,7 @@
 ---
-- name: Install packages
+# yum is kept rather than dnf so RedHat-family hosts predating dnf keep working.
+# On modern targets ansible-core routes ansible.builtin.yum to dnf anyway.
+- name: Install packages  # noqa: fqcn[action-core]
   become: true
   ansible.builtin.yum:
     name: "{{ pi_hole_prerequisites }}"
