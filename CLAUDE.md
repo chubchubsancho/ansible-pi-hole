@@ -89,8 +89,9 @@ README.md                  User-facing reference for every pi_hole_* variable.
 - Every task carries `tags`, always including `pihole` plus a role-specific set
   (`installation`, `prerequisites`, `prepare`, `configuration`, `check`, `source`).
   Tag new tasks the same way.
-- Tasks that touch the target system use `become: true` at the task level (note:
-  `tasks/redhat-prerequisites.yml` currently omits it — an existing inconsistency).
+- Tasks that modify the target system use `become: true` at the task level, in both
+  `tasks/debian-prerequisites.yml` and `tasks/redhat-prerequisites.yml`. Read-only
+  probes (the initial `stat` of `/opt/pihole`) do not.
 
 ## Keeping README, template, and defaults in sync
 

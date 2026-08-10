@@ -1,5 +1,6 @@
 ---
 - name: Install packages
+  become: true
   ansible.builtin.yum:
     name: "{{ pi_hole_prerequisites }}"
     state: present
