@@ -10,8 +10,8 @@ A single-purpose **Ansible role** (`chubchubsancho.pi_hole`) that installs
 Ansible Galaxy on release. There is no application code — everything here is YAML,
 Jinja2, and CI configuration.
 
-Target platforms: Debian family (apt) and RedHat family (yum). CI exercises Debian
-11/12/13 and Ubuntu 22.04/24.04/26.04 (LTS only).
+Target platforms: Debian family (apt) and RedHat family (dnf/yum). CI exercises Debian
+11/12/13, Ubuntu 22.04/24.04/26.04 (LTS only), AlmaLinux 9/10, and Fedora 42.
 
 ## Layout
 
@@ -38,6 +38,13 @@ README.md                  User-facing reference for every pi_hole_* variable.
 1. `tasks/main.yml` includes `{{ ansible_os_family | lower }}-prerequisites.yml`, so
    the file names are load-bearing — adding a platform means adding
    `tasks/<family>-prerequisites.yml`.
+   - The Debian file uses `ansible.builtin.apt` (it needs `update_cache`); the RedHat
+     file uses `ansible.builtin.package`, which resolves to dnf5 on Fedora 41+ and
+     RHEL 10, dnf on RHEL 8/9, and yum on older releases. Don't pin it back to a
+     concrete module — dnf5 systems have no `dnf-3` and the `yum` module fails there.
+   - RedHat-family hosts also get `epel-release` (skipped on Fedora): Pi-hole's
+     dependency package pulls in `dialog` and `lshw`, which the enterprise rebuilds
+     ship only in EPEL.
 2. `tasks/install.yml`:
    - `stat /opt/pihole` → `pihole_installed`. Every install step is guarded by
      `when: pihole_installed.stat.isdir is undefined`, i.e. **the clone and
@@ -135,6 +142,30 @@ Notes:
   converge playbook succeeds".
 - Containers run `/sbin/init` privileged with cgroup mounts because the Pi-hole
   installer needs systemd.
+- `molecule/default/Dockerfile.j2` bootstraps each image by probing for a package
+  manager, in order: `apt-get`, `dnf5`, `dnf`, `yum`. The `dnf5` branch must stay
+  ahead of `dnf` — on Fedora 41+ and RHEL 10 `dnf` is a symlink to dnf5, and the
+  dnf4 branch's `/usr/bin/dnf-3` does not exist there.
+- Pi-hole itself supports rpm hosts natively: `basic-install.sh` builds and installs
+  a `pihole-meta.rpm` via `rpmbuild`. v6 has no supported-OS gate, so the role does
+  not need `PIHOLE_SKIP_OS_CHECK`.
+- Molecule connects as the unprivileged `ansible` user (see
+  `molecule/default/group_vars/all.yml`), so `become: true` is genuinely exercised
+  rather than being a no-op against root. Keep it that way — switching to root would
+  make every `become` in the role untested.
+- RedHat-family images also need `hosts:` in `/etc/nsswitch.conf` rewritten to
+  `files dns`. Their default puts `nss-resolve` ahead of `dns` with
+  `[!UNAVAIL=return]`, so a systemd-resolved that answers but cannot resolve ends the
+  lookup instead of falling through to Docker's resolver. That surfaces late and
+  confusingly: the Pi-hole installer runs to completion, then `gravity.sh`'s
+  `getent hosts` gate fails and aborts with "No DNS resolution available" after a
+  120-second wait.
+- On RedHat-family images the stock sudo PAM stack fails inside a container with
+  "PAM account management error: Authentication service cannot retrieve
+  authentication info", reported before the `NOPASSWD` rule is consulted. The
+  Dockerfile replaces `/etc/pam.d/sudo` with a permit-only stack there, and then
+  asserts `runuser -u ansible -- sudo -n true` at build time so a broken image fails
+  during build rather than as an opaque converge error. Debian images are untouched.
 
 Linting:
 
