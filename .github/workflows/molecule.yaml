@@ -62,3 +62,21 @@ jobs:
           version: ${{ matrix.version }}
         run: |
           molecule test
+
+  custom-config:
+    # Renders the template with its list variables set. Those branches are platform
+    # independent, so one image is enough rather than another nine-way matrix.
+    name: molecule custom-config on debian 12
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Setup Environment
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install molecule molecule-plugins[docker] ansible-lint yamllint
+      - name: molecule test -s custom-config
+        env:
+          image: debian
+          version: "12"
+        run: |
+          molecule test -s custom-config

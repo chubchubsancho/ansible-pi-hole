@@ -1,0 +1,105 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Gather service facts
+      become: true
+      ansible.builtin.service_facts:
+
+    - name: Assert pihole-FTL survived the custom configuration
+      ansible.builtin.assert:
+        that:
+          - "'pihole-FTL.service' in ansible_facts.services"
+          - ansible_facts.services['pihole-FTL.service'].state == 'running'
+        fail_msg: >-
+          pihole-FTL is not running, which usually means it rejected a value in
+          pihole.toml: {{ ansible_facts.services['pihole-FTL.service'] | default('service not found') }}
+
+    # The four settings that produce an observable DNS answer. Each one reaches FTL by a
+    # different route, so this covers dns.hosts, dns.cnameRecords and misc.dnsmasq_lines
+    # end to end rather than only proving the text landed in the file.
+    - name: Resolve the records the configuration should have created
+      ansible.builtin.command: dig +short @127.0.0.1 {{ item.record }} A
+      register: custom_dig
+      until: item.expect in custom_dig.stdout_lines
+      retries: 10
+      delay: 3
+      changed_when: false
+      failed_when: false
+      loop:
+        - record: verify.molecule.test
+          expect: "10.99.99.99"
+          source: dns.hosts, first element
+        - record: second.molecule.test
+          expect: "10.99.99.98"
+          source: dns.hosts, second element
+        - record: alias.molecule.test
+          expect: "10.99.99.99"
+          source: dns.cnameRecords
+        - record: dnsmasq.molecule.test
+          expect: "10.99.0.77"
+          source: misc.dnsmasq_lines
+      loop_control:
+        label: "{{ item.record }} -> {{ item.expect }} ({{ item.source }})"
+
+    - name: Assert every configured record resolved
+      ansible.builtin.assert:
+        that:
+          - item.item.expect in item.stdout_lines
+        fail_msg: >-
+          {{ item.item.record }} ({{ item.item.source }}) returned
+          {{ item.stdout_lines | default([]) }}, expected {{ item.item.expect }}
+      loop: "{{ custom_dig.results }}"
+      loop_control:
+        label: "{{ item.item.record }}"
+
+    # Scalars come back through FTL's own parser, so a key the template spelled wrong or
+    # gave the wrong type shows up here rather than being silently dropped. CLI output is
+    # unquoted, hence the bare comparisons.
+    - name: Read the scalar settings back out of pihole-FTL
+      become: true
+      ansible.builtin.command: pihole-FTL --config {{ item.key }}
+      register: ftl_config
+      changed_when: false
+      loop:
+        - key: dns.dnssec
+          expect: "true"
+        - key: dns.expandHosts
+          expect: "true"
+        - key: dns.cache.size
+          expect: "5000"
+        - key: misc.nice
+          expect: "-5"
+      loop_control:
+        label: "{{ item.key }} == {{ item.expect }}"
+
+    - name: Assert pihole-FTL kept the scalar settings
+      ansible.builtin.assert:
+        that:
+          - item.stdout | trim == item.item.expect
+        fail_msg: "pihole-FTL reports {{ item.item.key }} as '{{ item.stdout | trim }}', expected '{{ item.item.expect }}'"
+      loop: "{{ ftl_config.results }}"
+      loop_control:
+        label: "{{ item.item.key }}"
+
+    # The list settings that have no DNS-visible effect. pihole-FTL rewrites pihole.toml
+    # on startup, so finding each element in the live file means FTL parsed it, kept it
+    # and wrote it back. That it wrote it back in the same layout the template produces
+    # is what the idempotence step checks.
+    - name: Read the live pihole.toml back
+      become: true
+      ansible.builtin.slurp:
+        src: /etc/pihole/pihole.toml
+      register: live_toml
+
+    - name: Assert pihole-FTL kept every configured list element
+      ansible.builtin.assert:
+        that:
+          - item in (live_toml.content | b64decode)
+        fail_msg: "'{{ item }}' is missing from /etc/pihole/pihole.toml, so pihole-FTL discarded it"
+      loop: >-
+        {{ pi_hole_dns_upstreams + pi_hole_dns_cname_records + pi_hole_dns_rev_servers
+           + pi_hole_dhcp_hosts + pi_hole_webserver_advanced_opts
+           + pi_hole_webserver_api_excludeclients + pi_hole_webserver_api_excludedomains
+           + pi_hole_misc_dnsmasq_lines + ['X-Molecule-Test: custom-config'] }}

@@ -132,14 +132,37 @@ python3 -m pip install molecule molecule-plugins[docker] ansible-lint yamllint
 image=debian version=12 molecule test
 image=debian version=12 molecule converge   # apply role without teardown
 image=debian version=12 molecule destroy
+image=debian version=12 molecule test -s custom-config
 ```
 
+There are two scenarios. `default` converges the role with everything at its defaults
+and runs across the full CI matrix. `custom-config` sets every list variable the
+template understands plus a few scalars, and runs on one image only — those branches are
+platform independent. Plain `molecule test` runs `default`; the second scenario needs
+`-s custom-config`.
+
 Notes:
-- The converge playbook is `molecule/resources/playbook.yml`, which imports the role by
-  its **Galaxy name** `chubchubsancho.pi_hole` (not the directory name).
-- The `ansible` verifier is disabled; `molecule/default/tests/test_default.py` is a
-  testinfra file that is not wired into the run. Verification is effectively "the
-  converge playbook succeeds".
+- The converge playbook is `molecule/resources/playbook.yml`, shared by both scenarios.
+  It imports the role by its **Galaxy name** `chubchubsancho.pi_hole` (not the directory
+  name).
+- Both scenarios use the `ansible` verifier. `molecule/default/verify.yml` checks that
+  pihole-FTL is enabled and running, that the installed files exist, that `pihole -v`
+  reports `pi_hole_version`, that ports 53 and 80 are up, and that a `pi_hole_dns_hosts`
+  record set in the inventory comes back out of FTL via `dig`.
+  `molecule/custom-config/verify.yml` resolves the records its configuration should have
+  created, reads the scalars back with `pihole-FTL --config`, and confirms every list
+  element survived into the live `pihole.toml`.
+- `custom-config` shares the default scenario's `Dockerfile.j2` through the platform's
+  `dockerfile:` key rather than keeping a second copy.
+- The template's arrays must render exactly the way pihole-FTL writes them — elements two
+  spaces deeper than the key, closing bracket at the key's indent, no comma after the
+  last element. FTL rewrites `pihole.toml` on startup and `tasks/install.yml` compares
+  the two as literal text, so any other layout makes the role non-idempotent. The
+  `custom-config` scenario is what catches this; `default` renders every array as `[]`
+  and cannot.
+- `custom-config` deliberately leaves `dns.queryLogging`, `misc.privacylevel` and
+  `dns.interface` unset: `basic-install.sh` writes those itself on a fresh install, after
+  the role has templated `pihole.toml`, so setting them would break idempotence.
 - Containers run `/sbin/init` privileged with cgroup mounts because the Pi-hole
   installer needs systemd.
 - `molecule/default/Dockerfile.j2` bootstraps each image by probing for a package
@@ -185,9 +208,10 @@ role and excludes `.github/`, `.cache/`, `.git/`.
 
 ## CI / release
 
-- `.github/workflows/molecule.yaml` — two jobs on PRs and pushes to `master`: a `lint`
-  job (`yamllint .`, then `ansible-lint -q .`) and the matrix `molecule test`. They run
-  in parallel; both must pass.
+- `.github/workflows/molecule.yaml` — three jobs on PRs and pushes to `master`: a `lint`
+  job (`yamllint .`, then `ansible-lint -q .`), the matrix `molecule test`, and
+  `custom-config` (`molecule test -s custom-config` on debian 12). They run in parallel;
+  all must pass.
 - `.github/workflows/release.yaml` — release-please (manifest mode, `release-type:
   simple`) on `master`; maintains `CHANGELOG.md` and `.release-please-manifest.json`.
 - `.github/workflows/publish.yaml` — on GitHub release, imports the role into Galaxy.
