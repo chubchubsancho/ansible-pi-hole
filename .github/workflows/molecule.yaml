@@ -44,6 +44,12 @@ jobs:
             version: "12"
           - image: debian
             version: "13"
+          - image: almalinux
+            version: "9"
+          - image: almalinux
+            version: "10"
+          - image: fedora
+            version: "42"
     steps:
       - uses: actions/checkout@v7
       - name: Setup Environment
