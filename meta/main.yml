@@ -13,12 +13,10 @@ galaxy_info:
   platforms:
     - name: Debian
       versions:
-        - buster
-        - bullseye
+        - all
     - name: Ubuntu
       versions:
-        - focal
-        - jammy
+        - all
 
   galaxy_tags:
     - pihole
