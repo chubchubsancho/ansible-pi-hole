@@ -131,11 +131,17 @@
   #
   # Allowed values are:
   #     Array of custom DNS records each one in HOSTS form: "IP HOSTNAME [HOSTNAME ...]"
+{# Element indentation and the absent trailing comma below are deliberate: pihole-FTL
+   rewrites this file on startup, emitting array elements at 4 spaces, the closing
+   bracket at 2, and a comma only between elements (writeTOMLvalue() in
+   src/config/toml_helper.c). tasks/install.yml compares the rendered file against the
+   live one as literal text, so any other layout makes the role rewrite pihole.toml on
+   every run. Keep the loop tags in column 0 so nothing is emitted ahead of the value. #}
 {% if pi_hole_dns_hosts is defined %}
   hosts = [
-    {% for host in pi_hole_dns_hosts %}
-    "{{ host }}",
-    {% endfor %}
+{% for host in pi_hole_dns_hosts %}
+    "{{ host }}"{{ "," if not loop.last else "" }}
+{% endfor %}
   ] ### CHANGED, default = []
 {% else %}
   hosts = []

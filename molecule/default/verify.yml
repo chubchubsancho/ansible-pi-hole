@@ -1,0 +1,89 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  # The role is not imported here, so its defaults are out of scope. Read them from
+  # the role itself rather than restating pi_hole_version and letting it drift.
+  vars_files:
+    - "{{ playbook_dir }}/../../defaults/main.yml"
+  tasks:
+    - name: Gather service facts
+      become: true
+      ansible.builtin.service_facts:
+
+    - name: Assert pihole-FTL is enabled and running
+      ansible.builtin.assert:
+        that:
+          - "'pihole-FTL.service' in ansible_facts.services"
+          - ansible_facts.services['pihole-FTL.service'].state == 'running'
+          - ansible_facts.services['pihole-FTL.service'].status == 'enabled'
+        fail_msg: >-
+          pihole-FTL is not enabled and running:
+          {{ ansible_facts.services['pihole-FTL.service'] | default('service not found') }}
+
+    - name: Stat the paths the role is responsible for
+      become: true
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      loop:
+        - /opt/pihole
+        - /etc/pihole/pihole.toml
+        - /etc/pihole/gravity.db
+      register: pihole_paths
+
+    - name: Assert the installation left its files behind
+      ansible.builtin.assert:
+        that:
+          - pihole_paths.results[0].stat.isdir | default(false)
+          - pihole_paths.results[1].stat.exists | default(false)
+          - pihole_paths.results[2].stat.exists | default(false)
+        fail_msg: >-
+          Missing: {{ pihole_paths.results | rejectattr('stat.exists') | map(attribute='item') | list }}
+
+    - name: Assert pihole.toml is rendered with the mode the role sets
+      ansible.builtin.assert:
+        that:
+          - pihole_paths.results[1].stat.mode == '0640'
+        fail_msg: "/etc/pihole/pihole.toml is {{ pihole_paths.results[1].stat.mode }}, expected 0640"
+
+    - name: Query the installed Pi-hole version
+      become: true
+      ansible.builtin.command: pihole -v
+      register: pihole_version
+      changed_when: false
+
+    - name: Assert the requested revision is the one that got installed
+      ansible.builtin.assert:
+        that:
+          - pi_hole_version in pihole_version.stdout
+        fail_msg: "Expected {{ pi_hole_version }} in `pihole -v` output: {{ pihole_version.stdout }}"
+
+    - name: Assert Pi-hole is listening on its DNS and webserver ports
+      ansible.builtin.wait_for:
+        host: 127.0.0.1
+        port: "{{ item }}"
+        timeout: 30
+      loop:
+        - 53
+        - 80
+
+    # End-to-end check of the role's actual job: a value set as a role variable has to
+    # survive templating into pihole.toml and come back out of FTL as a real DNS answer.
+    # The record is local to pihole.toml, so this never leaves the container and cannot
+    # flake on upstream resolvers.
+    - name: Resolve the custom DNS record through the local Pi-hole
+      ansible.builtin.command: dig +short @127.0.0.1 {{ pi_hole_dns_hosts[0].split()[1] }} A
+      register: pihole_dig
+      until: pihole_dig.stdout | trim == pi_hole_dns_hosts[0].split()[0]
+      retries: 10
+      delay: 3
+      changed_when: false
+      failed_when: false
+
+    - name: Assert Pi-hole answered with the configured address
+      ansible.builtin.assert:
+        that:
+          - pihole_dig.stdout | trim == pi_hole_dns_hosts[0].split()[0]
+        fail_msg: >-
+          Querying {{ pi_hole_dns_hosts[0].split()[1] }} against 127.0.0.1 returned
+          '{{ pihole_dig.stdout | trim }}', expected '{{ pi_hole_dns_hosts[0].split()[0] }}'
