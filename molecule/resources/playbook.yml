@@ -2,6 +2,6 @@
 - name: Converge
   hosts: all
   tasks:
-    - name: "install pi-hole"
-      import_role:
+    - name: Install pi-hole
+      ansible.builtin.import_role:
         name: chubchubsancho.pi_hole
