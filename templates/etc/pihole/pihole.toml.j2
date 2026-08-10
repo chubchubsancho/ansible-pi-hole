@@ -6,11 +6,18 @@
   #
   # Allowed values are:
   #     Array of IP addresses and/or hostnames, optionally with a port (#...)
+{# Every array block in this file follows the layout pihole-FTL itself writes, because
+   FTL rewrites pihole.toml on startup and tasks/install.yml compares the rendered file
+   against the live one as literal text -- any other layout makes the role rewrite
+   pihole.toml on every run. writeTOMLvalue() in FTL's src/config/toml_helper.c emits
+   elements two spaces deeper than the key, closes the bracket at the key's indent, and
+   writes a comma only between elements, never after the last one. Keep the loop tags in
+   column 0 so no whitespace is emitted ahead of the element. #}
 {% if pi_hole_dns_upstreams is defined %}
   upstreams = [
-  {% for upstream in pi_hole_dns_upstreams %}
-    "{{ upstream }}",
-  {% endfor %}
+{% for upstream in pi_hole_dns_upstreams %}
+    "{{ upstream }}"{{ "," if not loop.last else "" }}
+{% endfor %}
   ] ### CHANGED, default = []
 {% else %}
   upstreams = []
@@ -131,12 +138,6 @@
   #
   # Allowed values are:
   #     Array of custom DNS records each one in HOSTS form: "IP HOSTNAME [HOSTNAME ...]"
-{# Element indentation and the absent trailing comma below are deliberate: pihole-FTL
-   rewrites this file on startup, emitting array elements at 4 spaces, the closing
-   bracket at 2, and a comma only between elements (writeTOMLvalue() in
-   src/config/toml_helper.c). tasks/install.yml compares the rendered file against the
-   live one as literal text, so any other layout makes the role rewrite pihole.toml on
-   every run. Keep the loop tags in column 0 so nothing is emitted ahead of the value. #}
 {% if pi_hole_dns_hosts is defined %}
   hosts = [
 {% for host in pi_hole_dns_hosts %}
@@ -240,9 +241,9 @@
   #     Array of CNAMEs, each one in the following form: "<cname>,<target>[,<TTL>]"
 {% if pi_hole_dns_cname_records is defined %}
   cnameRecords = [
-  {% for cname_record in pi_hole_dns_cname_records %}
-    {{ cname_record }},
-  {% endfor %}
+{% for cname_record in pi_hole_dns_cname_records %}
+    "{{ cname_record }}"{{ "," if not loop.last else "" }}
+{% endfor %}
   ]
 {% else %}
   cnameRecords = []
@@ -296,9 +297,9 @@
   #     Example: "fritz.box"
 {% if pi_hole_dns_rev_servers is defined %}
   revServers = [
-    {% for rev_server in pi_hole_dns_rev_servers %}
-    "{{ rev_server }}",
-    {% endfor %}
+{% for rev_server in pi_hole_dns_rev_servers %}
+    "{{ rev_server }}"{{ "," if not loop.last else "" }}
+{% endfor %}
   ]
 {% else %}
   revServers = []
@@ -695,9 +696,9 @@
   #     "[<hwaddr>][,id:<client_id>|*][,set:<tag>][,tag:<tag>][,<ipaddr>][,<hostname>][,<lease_time>][,ignore]"
 {% if pi_hole_dhcp_hosts is defined %}
   hosts = [
-  {% for host in pi_hole_dhcp_hosts %}
-    "{{ host }}",
-  {% endfor %}
+{% for host in pi_hole_dhcp_hosts %}
+    "{{ host }}"{{ "," if not loop.last else "" }}
+{% endfor %}
   ]
 {% else %}
   hosts = []
@@ -1016,9 +1017,9 @@
   #     An array of HTTP headers
 {% if pi_hole_webserver_headers is defined %}
   headers = [
-    {% for header in pi_hole_webserver_headers %}
-    "{{ header }}",
-    {% endfor %}
+{% for header in pi_hole_webserver_headers %}
+    "{{ header }}"{{ "," if not loop.last else "" }}
+{% endfor %}
   ]
 {% else %}
   headers = [
@@ -1058,9 +1059,9 @@
   #     An array of valid CivetWeb options
 {% if pi_hole_webserver_advanced_opts is defined %}
   advancedOpts = [
-    {% for opt in pi_hole_webserver_advanced_opts %}
-    "{{ opt }}",
-    {% endfor %}
+{% for opt in pi_hole_webserver_advanced_opts %}
+    "{{ opt }}"{{ "," if not loop.last else "" }}
+{% endfor %}
   ]
 {% else %}
   advancedOpts = []
@@ -1264,9 +1265,9 @@
     #     An array of regular expressions describing clients
 {% if pi_hole_webserver_api_excludeclients is defined %}
     excludeClients = [
-      {% for client in pi_hole_webserver_api_excludeclients %}
-      "{{ client }}",
-      {% endfor %}
+{% for client in pi_hole_webserver_api_excludeclients %}
+      "{{ client }}"{{ "," if not loop.last else "" }}
+{% endfor %}
     ]
 {% else %}
     excludeClients = []
@@ -1283,9 +1284,9 @@
     #     An array of regular expressions describing domains
 {% if pi_hole_webserver_api_excludedomains is defined %}
     excludeDomains = [
-      {% for domain in pi_hole_webserver_api_excludedomains %}
-      "{{ domain }}",
-      {% endfor %}
+{% for domain in pi_hole_webserver_api_excludedomains %}
+      "{{ domain }}"{{ "," if not loop.last else "" }}
+{% endfor %}
     ]
 {% else %}
     excludeDomains = []
@@ -1486,9 +1487,9 @@
   #     Array of valid dnsmasq config line options
 {% if pi_hole_misc_dnsmasq_lines is defined %}
   dnsmasq_lines = [
-    {% for line in pi_hole_misc_dnsmasq_lines %}
-    "{{ line }}",
-    {% endfor %}
+{% for line in pi_hole_misc_dnsmasq_lines %}
+    "{{ line }}"{{ "," if not loop.last else "" }}
+{% endfor %}
   ]
 {% else %}
   dnsmasq_lines = []
