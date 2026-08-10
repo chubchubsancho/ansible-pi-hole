@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.2.0](https://github.com/chubchubsancho/ansible-pi-hole/compare/v2.1.3...v2.2.0) (2026-08-10)
+
+
+### Features
+
+* support RedHat-family hosts ([fd73fcd](https://github.com/chubchubsancho/ansible-pi-hole/commit/fd73fcdfc2cad5d4d6ee857be152ee3912df52d2))
+
+
+### Bug Fixes
+
+* add missing become to RedHat prerequisites task ([8009740](https://github.com/chubchubsancho/ansible-pi-hole/commit/8009740123869aa4ddbb8514b2d7768e094b77d1))
+
 ## [2.1.3](https://github.com/chubchubsancho/ansible-pi-hole/compare/v2.1.2...v2.1.3) (2026-08-10)
 
 
