@@ -1,0 +1,71 @@
+---
+# Exercises the repair half of the config drift detection in tasks/install.yml.
+#
+# The idempotence step only ever covers the "nothing changed" branch: it proves the role
+# leaves a matching pihole.toml alone. The branch that the whole grep/sed comparison
+# exists for -- noticing that the live file no longer matches the template and rewriting
+# it -- is never reached, because nothing in the test sequence makes the file drift.
+#
+# Molecule runs side_effect after idempotence and before verify, so this corrupts a
+# value, re-runs the converge playbook over it, and checks the role put it back.
+- name: Make the live configuration drift
+  hosts: all
+  gather_facts: false
+  tasks:
+    # pihole-FTL watches /etc/pihole with inotify and reloads pihole.toml whenever
+    # something else writes it, so leaving it running would race every step below and
+    # make the result depend on timing. What is under test here is the role's comparison,
+    # not FTL's reaction to an edit, and stopping FTL also means the repair can only have
+    # come from the role. verify.yml still expects FTL up, so the last play starts it.
+    - name: Stop pihole-FTL for the duration of the side effect
+      become: true
+      ansible.builtin.service:
+        name: pihole-FTL
+        state: stopped
+
+    # blockTTL is a plain integer that appears exactly once, survives the comment
+    # stripping the comparison does, and changes nothing about DNS or the web server.
+    - name: Change a templated value in the live pihole.toml
+      become: true
+      ansible.builtin.replace:
+        path: /etc/pihole/pihole.toml
+        regexp: '^(\s*)blockTTL = 2$'
+        replace: '\g<1>blockTTL = 7'
+      register: drift_introduced
+
+    - name: Assert the drift was actually introduced
+      ansible.builtin.assert:
+        that:
+          - drift_introduced is changed
+        fail_msg: >-
+          Could not find "blockTTL = 2" to change in /etc/pihole/pihole.toml, so the
+          repair checked below would pass without anything having drifted.
+
+# Exactly what the converge step runs, rather than a second copy of it.
+- name: Re-apply the role over the drifted configuration
+  ansible.builtin.import_playbook: ../resources/playbook.yml
+
+- name: Check the role repaired the drift
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Read the repaired pihole.toml
+      become: true
+      ansible.builtin.slurp:
+        src: /etc/pihole/pihole.toml
+      register: repaired_toml
+
+    - name: Assert the templated value is back
+      ansible.builtin.assert:
+        that:
+          - "'blockTTL = 2' in (repaired_toml.content | b64decode)"
+          - "'blockTTL = 7' not in (repaired_toml.content | b64decode)"
+        fail_msg: >-
+          The role did not rewrite /etc/pihole/pihole.toml over the drifted value, so
+          the config drift detection in tasks/install.yml missed a real change.
+
+    - name: Start pihole-FTL again
+      become: true
+      ansible.builtin.service:
+        name: pihole-FTL
+        state: started
