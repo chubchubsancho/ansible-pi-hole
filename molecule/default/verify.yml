@@ -41,9 +41,18 @@
         fail_msg: >-
           Missing: {{ pihole_paths.results | rejectattr('stat.exists') | map(attribute='item') | list }}
 
-    # Deliberately not asserting pihole.toml's mode. The role templates it 0640, but
-    # pihole-FTL rewrites the file on startup and creates it 0644, so the mode on a
-    # converged host belongs to FTL rather than to the role.
+    # pihole-FTL replaces pihole.toml on startup via tmp file and rename, so the mode on
+    # a converged host is the new file's creation mode rather than the one the template
+    # task set. The role declares that same 0644, and this assertion is what keeps the
+    # two from drifting apart again if FTL ever changes how it writes the file.
+    - name: Assert pihole.toml ends up with the mode the role declares
+      ansible.builtin.assert:
+        that:
+          - pihole_paths.results[1].stat.mode == '0644'
+        fail_msg: >-
+          /etc/pihole/pihole.toml is {{ pihole_paths.results[1].stat.mode }}, but the role
+          templates it 0644; pihole-FTL's rewrite no longer matches what the role declares
+
 
     # Asking git rather than `pihole -v`. The revision the role controls is the one it
     # cloned, whereas `pihole -v` reports Pi-hole's own core/web/FTL versions -- and it
