@@ -14,10 +14,13 @@ ENV {{ var }} {{ value }}
 {% endfor %}
 {% endif %}
 
-RUN if [ $(command -v apt-get) ]; then apt-get update && DEBIAN_FRONTEND=noninteractive LANG=C.UTF-8 apt-get install -y python3 sudo bash ca-certificates iproute2 python3-apt aptitude systemd systemd-sysv && apt-get clean; \
-    elif [ $(command -v dnf5) ]; then dnf5 makecache && dnf5 --assumeyes install python3 python3-libdnf5 sudo bash iproute systemd systemd-sysv && dnf5 clean all; \
-    elif [ $(command -v dnf) ]; then dnf makecache && dnf --assumeyes install /usr/bin/python3 /usr/bin/python3-config /usr/bin/dnf-3 sudo bash iproute systemd systemd-sysv && dnf clean all; \
-    elif [ $(command -v yum) ]; then yum makecache fast && yum install -y /usr/bin/python /usr/bin/python2-config sudo yum-plugin-ovl bash iproute systemd systemd-sysv && sed -i 's/plugins=0/plugins=1/g' /etc/yum.conf && yum clean all; \
+# dnsutils/bind-utils provide dig, which molecule/default/verify.yml uses to query the
+# running pihole-FTL. Pi-hole's own dependency package may well pull it in, but the
+# verification must not depend on that staying true.
+RUN if [ $(command -v apt-get) ]; then apt-get update && DEBIAN_FRONTEND=noninteractive LANG=C.UTF-8 apt-get install -y python3 sudo bash ca-certificates iproute2 python3-apt aptitude systemd systemd-sysv dnsutils && apt-get clean; \
+    elif [ $(command -v dnf5) ]; then dnf5 makecache && dnf5 --assumeyes install python3 python3-libdnf5 sudo bash iproute systemd systemd-sysv bind-utils && dnf5 clean all; \
+    elif [ $(command -v dnf) ]; then dnf makecache && dnf --assumeyes install /usr/bin/python3 /usr/bin/python3-config /usr/bin/dnf-3 sudo bash iproute systemd systemd-sysv bind-utils && dnf clean all; \
+    elif [ $(command -v yum) ]; then yum makecache fast && yum install -y /usr/bin/python /usr/bin/python2-config sudo yum-plugin-ovl bash iproute systemd systemd-sysv bind-utils && sed -i 's/plugins=0/plugins=1/g' /etc/yum.conf && yum clean all; \
     fi
 
 ENV ANSIBLE_USER=ansible DEPLOY_GROUP=deployer

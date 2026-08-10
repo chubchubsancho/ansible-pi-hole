@@ -1,2 +1,7 @@
 ---
 ansible_user: ansible
+
+# Consumed by molecule/default/verify.yml: gives the role a custom DNS record to
+# render into pihole.toml so verification can query it back out of pihole-FTL.
+pi_hole_dns_hosts:
+  - "10.99.99.99 verify.molecule.test"

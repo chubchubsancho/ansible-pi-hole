@@ -42,4 +42,3 @@ provisioner:
 
 verifier:
   name: ansible
-  enabled: false
