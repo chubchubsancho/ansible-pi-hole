@@ -1,12 +1,25 @@
 ---
-# yum is kept rather than dnf so RedHat-family hosts predating dnf keep working.
-# On modern targets ansible-core routes ansible.builtin.yum to dnf anyway.
-- name: Install packages  # noqa: fqcn[action-core]
+# Pi-hole's dependency meta package requires dialog and lshw, which the enterprise
+# RedHat rebuilds (AlmaLinux, Rocky, RHEL) ship only in EPEL. Fedora carries both in
+# its main repository, so it needs no extra repo.
+- name: Enable EPEL repository
   become: true
-  ansible.builtin.yum:
+  ansible.builtin.package:
+    name: epel-release
+    state: present
+  when: ansible_distribution != 'Fedora'
+  tags:
+    - pihole
+    - installation
+    - prerequisites
+
+# ansible.builtin.package rather than yum/dnf: it resolves to dnf5 on Fedora 41+ and
+# RHEL 10, dnf on RHEL 8/9, and yum on older releases.
+- name: Install packages
+  become: true
+  ansible.builtin.package:
     name: "{{ pi_hole_prerequisites }}"
     state: present
-    update_cache: true
   tags:
     - pihole
     - installation
