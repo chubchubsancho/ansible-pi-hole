@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.3.0](https://github.com/chubchubsancho/ansible-pi-hole/compare/v2.2.1...v2.3.0) (2026-10-17)
+
+
+### Features
+
+* **pi-hole:** update dependency pi-hole/pi-hole to v6.5 ([a76fbf0](https://github.com/chubchubsancho/ansible-pi-hole/commit/a76fbf0ac978e359d4c77e50b0152e76f7551abd))
+
+
+### Bug Fixes
+
+* **config:** template pihole.toml 0640 to match Pi-hole v6.5 ([f8fb77c](https://github.com/chubchubsancho/ansible-pi-hole/commit/f8fb77c2fd55172bdab57a6f93c0a98c03de0bec))
+
 ## [2.2.1](https://github.com/chubchubsancho/ansible-pi-hole/compare/v2.2.0...v2.2.1) (2026-08-10)
 
 
