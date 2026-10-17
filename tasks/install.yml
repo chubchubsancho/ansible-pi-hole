@@ -79,19 +79,18 @@
     - prepare
     - configuration
 
-# 0644 matches the mode the file actually ends up with. pihole-FTL rewrites pihole.toml
-# on startup by opening pihole.toml.tmp, chowning it and renaming it into place
-# (openFTLtoml/closeFTLtoml in FTL's src/config/toml_helper.c, rename() in
-# toml_writer.c). The rename replaces the inode, so whatever mode is set here is
-# discarded and the new file keeps its creation mode of 0666 & ~umask, i.e. 0644 under
-# systemd's default UMask=0022. Declaring anything stricter would only describe a state
+# 0640 matches the mode the file actually ends up with. pihole-FTL-prestart.sh, which
+# systemd runs before every FTL start, chmods every regular file below /etc/pihole to
+# 0640 (TLS .pem/.crt files aside). Up to Pi-hole v6.4 FTL then replaced pihole.toml via
+# tmp file and rename, which left 0666 & ~umask (0644) behind instead; from v6.5 the
+# prestart's 0640 is what survives. Declaring anything else would only describe a state
 # that never survives the first FTL start.
 - name: Copy pihole.toml
   become: true
   ansible.builtin.template:
     src: etc/pihole/pihole.toml.j2
     dest: /etc/pihole/pihole.toml
-    mode: 0644
+    mode: 0640
     backup: true
   when: >
     not (pihole_toml_exists.stat.exists | default(false)) or
