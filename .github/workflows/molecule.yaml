@@ -43,8 +43,6 @@ jobs:
           - image: ubuntu
             version: "26.04"
           - image: debian
-            version: "11"
-          - image: debian
             version: "12"
           - image: debian
             version: "13"

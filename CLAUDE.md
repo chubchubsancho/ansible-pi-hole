@@ -11,7 +11,7 @@ Ansible Galaxy on release. There is no application code — everything here is Y
 Jinja2, and CI configuration.
 
 Target platforms: Debian family (apt) and RedHat family (dnf/yum). CI exercises Debian
-11/12/13, Ubuntu 22.04/24.04/26.04 (LTS only), AlmaLinux 9/10, and Fedora 42.
+12/13, Ubuntu 22.04/24.04/26.04 (LTS only), AlmaLinux 9/10, and Fedora 42.
 
 ## Layout
 
