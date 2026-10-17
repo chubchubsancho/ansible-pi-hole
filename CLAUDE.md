@@ -147,7 +147,7 @@ Notes:
   name).
 - Both scenarios use the `ansible` verifier. `molecule/default/verify.yml` checks that
   pihole-FTL is enabled and running, that the installed files exist with `pihole.toml` at
-  0644, that `git describe --tags` in `pi_hole_install_dir` reports `pi_hole_version`,
+  0640, that `git describe --tags` in `pi_hole_install_dir` reports `pi_hole_version`,
   that ports 53 and 80 are up, and that a `pi_hole_dns_hosts` record set in the inventory
   comes back out of FTL via `dig`. Don't reach for `pihole -v` here: it exits 2 with no
   output at all on AlmaLinux 9 and 10, and it reports Pi-hole's own core/web/FTL versions
