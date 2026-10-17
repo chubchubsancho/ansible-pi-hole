@@ -17,9 +17,13 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Setup Environment
+        # A venv keeps the runner's apt-installed Python packages off the path; see the
+        # molecule jobs below for why that matters.
         run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install ansible-lint yamllint
+          python3 -m venv "$RUNNER_TEMP/venv"
+          echo "$RUNNER_TEMP/venv/bin" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/venv/bin/python" -m pip install --upgrade pip
+          "$RUNNER_TEMP/venv/bin/python" -m pip install ansible-lint yamllint
       - name: yamllint
         run: yamllint .
       - name: ansible-lint
@@ -53,9 +57,15 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Setup Environment
+        # Install into a venv rather than the user site. molecule loads every driver
+        # molecule-plugins ships, and the ec2 one imports boto3; outside a venv that
+        # resolves to the runner's apt-installed boto3 and pyOpenSSL, which break against
+        # the newer cryptography pip pulls in.
         run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install molecule molecule-plugins[docker] ansible-lint yamllint
+          python3 -m venv "$RUNNER_TEMP/venv"
+          echo "$RUNNER_TEMP/venv/bin" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/venv/bin/python" -m pip install --upgrade pip
+          "$RUNNER_TEMP/venv/bin/python" -m pip install molecule molecule-plugins[docker] ansible-lint yamllint
       - name: molecule test
         env:
           image: ${{ matrix.image }}
@@ -71,9 +81,15 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Setup Environment
+        # Install into a venv rather than the user site. molecule loads every driver
+        # molecule-plugins ships, and the ec2 one imports boto3; outside a venv that
+        # resolves to the runner's apt-installed boto3 and pyOpenSSL, which break against
+        # the newer cryptography pip pulls in.
         run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install molecule molecule-plugins[docker] ansible-lint yamllint
+          python3 -m venv "$RUNNER_TEMP/venv"
+          echo "$RUNNER_TEMP/venv/bin" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/venv/bin/python" -m pip install --upgrade pip
+          "$RUNNER_TEMP/venv/bin/python" -m pip install molecule molecule-plugins[docker] ansible-lint yamllint
       - name: molecule test -s custom-config
         env:
           image: debian
