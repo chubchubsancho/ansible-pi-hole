@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.4.0](https://github.com/chubchubsancho/ansible-pi-hole/compare/v2.3.0...v2.4.0) (2026-11-13)
+
+
+### Features
+
+* **pi-hole:** update dependency pi-hole/pi-hole to v6.6 ([2334622](https://github.com/chubchubsancho/ansible-pi-hole/commit/2334622aafe85ce565c97a88fb2403a7405c87d6))
+
+
+### Bug Fixes
+
+* **config:** create /etc/pihole with mode 0755 for Pi-hole v6.6 ([cb46e56](https://github.com/chubchubsancho/ansible-pi-hole/commit/cb46e561b59f9fa0ec57e3b9a40011e1dc45ff2c))
+
 ## [2.3.0](https://github.com/chubchubsancho/ansible-pi-hole/compare/v2.2.1...v2.3.0) (2026-10-17)
 
 
