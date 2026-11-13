@@ -8,12 +8,17 @@
     - installation
     - check
 
+# 0755, the mode basic-install.sh and pihole-FTL-prestart.sh give it. From v6.6 the
+# installer chowns /etc/pihole to pihole and writes into it as that user (via setpriv),
+# which needs the execute bit to traverse it. The installer's own `install -d -m 755`
+# would fix the mode, but it only runs on a fresh install, and the pihole.toml templated
+# below makes basic-install.sh treat this as an update, so a 0644 directory fails it.
 - name: Create pihole config directory
   become: true
   ansible.builtin.file:
     name: /etc/pihole
     state: directory
-    mode: 0644
+    mode: 0755
   when: pihole_installed.stat.isdir is undefined
   tags:
     - pihole
